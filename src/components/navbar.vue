@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="navbar bg-transparent backdrop-blur-md bg-opacity-30 transition-all"
+    class="navbar bg-transparent backdrop-blur-md bg-opacity-30 transition-all no-print"
     :class="[sizeClasses.navbar]"
   >
     <div :class="['navbar-start gap-1 sm:gap-2', sizeClasses.gap]">
@@ -62,7 +62,11 @@
       </div>
       
       <!-- Download button -->
-      <button :class="['btn btn-accent btn-circle rounded-full flex-shrink-0', sizeClasses.downloadBtn]">
+      <button 
+        @click="downloadPDF"
+        :class="['btn btn-accent btn-circle rounded-full flex-shrink-0', sizeClasses.downloadBtn]"
+        title="Download resume as PDF"
+      >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
         </svg>
@@ -87,7 +91,10 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { getPersonalData, getSectionsData } from '../controllers/json-data-controller'
+
+const router = useRouter()
 
 const props = defineProps({
   size: {
@@ -194,5 +201,17 @@ const handleSearchBlur = () => {
   if (!searchQuery.value) {
     isSearchOpen.value = false
   }
+}
+
+/**
+ * Navigate to print resume page which automatically opens print dialog
+ * @function
+ */
+const downloadPDF = () => {
+  router.push({ name: 'PrintResume' })
+}
+
+const mainButtonFunction = () => {
+  router.push({ name: 'Home' })
 }
 </script>
