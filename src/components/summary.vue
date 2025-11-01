@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full">
+  <section class="container mx-auto max-w-screen-lg my-8 sm:my-12 px-4 glass rounded-box p-6 sm:p-8 text-base sm:text-lg">
     <!-- Header: Foto + Nome/Título -->
     <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
       <div class="relative">
@@ -12,14 +12,14 @@
         </div>
       </div>
       <div class="flex-1 text-center sm:text-left min-w-0">
-        <h2 class="text-2xl font-bold text-primary">{{ personalData.fullName }}</h2>
-        <p v-if="personalData.title" class="text-base-content/70">{{ personalData.title }}</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-primary">{{ personalData.fullName }}</h2>
+        <p v-if="personalData.title" class="text-base-content/70 text-lg">{{ personalData.title }}</p>
 
         <!-- Botões: horizontal, entre o nome e o resumo -->
         <div class="mt-3">
           <TransitionGroup
             tag="div"
-            class="flex flex-wrap gap-2 justify-center sm:justify-start"
+            class="flex flex-wrap gap-3 justify-center sm:justify-start"
             appear
             enter-active-class="transition-all duration-300"
             leave-active-class="transition-all duration-200"
@@ -35,20 +35,21 @@
               :title="c.title"
               :target="c.external ? '_blank' : undefined"
               rel="noopener noreferrer"
-              class="btn btn-sm btn-outline"
+              class="btn btn-sm btn-outline gap-2"
               :class="c.btnClass"
             >
-              {{ c.label }}
+              <i :class="['bi', c.icon]" aria-hidden="true"></i>
+              <span class="sr-only">{{ c.label }}</span>
             </a>
           </TransitionGroup>
         </div>
 
         <!-- Resumo abaixo dos botões -->
-        <div class="mt-3">
-          <h3 v-if="summaryTitle" class="text-sm font-semibold uppercase tracking-wide text-primary">
+        <div class="mt-4 sm:mt-5 mx-auto sm:mx-0 max-w-prose md:max-w-[65ch] text-center sm:text-left">
+          <h3 v-if="summaryTitle" class="text-base font-semibold uppercase tracking-wide text-primary">
             {{ summaryTitle }}
           </h3>
-          <p v-if="summaryText" class="mt-2 text-sm leading-relaxed">
+          <p v-if="summaryText" class="mt-2 text-base sm:text-lg leading-relaxed md:leading-loose">
             {{ summaryText }}
           </p>
         </div>
@@ -80,6 +81,7 @@ type ContactButton = {
   title: string
   external?: boolean
   btnClass: string
+  icon: string
 }
 
 const personalData = computed<PersonalData>(() => getPersonalData() as PersonalData)
@@ -121,23 +123,27 @@ const contacts = computed<ContactButton[]>(() => {
 
   const arr: ContactButton[] = []
   if (p.phone) {
-    arr.push({ type: 'phone', label: 'Telefone', href: `tel:${p.phone}`, title: String(p.phone), btnClass: accentBtn })
+    arr.push({ type: 'phone', label: 'Telefone', href: `tel:${p.phone}`, title: String(p.phone), btnClass: accentBtn, icon: 'bi-telephone-fill' })
   }
   if (p.email) {
-    arr.push({ type: 'email', label: 'Email', href: `mailto:${p.email}`, title: String(p.email), btnClass: accentBtn })
+    arr.push({ type: 'email', label: 'Email', href: `mailto:${p.email}`, title: String(p.email), btnClass: accentBtn, icon: 'bi-envelope-fill' })
   }
   if (p.github) {
     const url = String(p.github)
-    arr.push({ type: 'github', label: 'GitHub', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn })
+    arr.push({ type: 'github', label: 'GitHub', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-github' })
   }
   if (p.linkedin) {
     const url = String(p.linkedin)
-    arr.push({ type: 'linkedin', label: 'LinkedIn', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn })
+    arr.push({ type: 'linkedin', label: 'LinkedIn', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-linkedin' })
   }
   if (p.website) {
     const url = String(p.website)
-    arr.push({ type: 'website', label: 'Website', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn })
+    arr.push({ type: 'website', label: 'Website', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-globe2' })
   }
   return arr
 })
 </script>
+
+<style>
+@import "bootstrap-icons/font/bootstrap-icons.css";
+</style>

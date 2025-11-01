@@ -11,8 +11,13 @@ const showNavbar = computed(() => {
 </script>
 
 <template>
-  <Navbar v-if="showNavbar" size="xl" class="no-print" />
-  <RouterView />
+  <div class="relative min-h-dvh">
+    <!-- content -->
+    <Navbar v-if="showNavbar" size="xl" class="no-print sticky top-0 z-50" />
+    <div class="relative z-10">
+      <RouterView />
+    </div>
+  </div>
 </template>
 
 <style>
