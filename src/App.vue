@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import Navbar from './components/navbar.vue'
+import { computed } from 'vue'
+
+const route = useRoute()
+
+const showNavbar = computed(() => {
+  return route.name !== 'PrintResume'
+})
 </script>
 
 <template>
-  <Navbar size="xl" class="no-print" />
+  <Navbar v-if="showNavbar" size="xl" class="no-print" />
   <RouterView />
 </template>
 
 <style>
-@media print {
-  .no-print {
-    display: none !important;
-  }
-}
 </style>

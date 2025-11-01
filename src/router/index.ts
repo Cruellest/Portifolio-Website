@@ -5,11 +5,11 @@ import Homepage from '../pages/Homepage.vue'
 const routes = [
 
 
-    {
-      path: '/',
-      name: 'Home',
-      component: Homepage
-    },
+  {
+    path: '/',
+    name: 'Home',
+    component: Homepage
+ },
   {
     path: '/print-resume',
     name: 'PrintResume',

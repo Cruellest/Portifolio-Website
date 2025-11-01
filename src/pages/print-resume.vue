@@ -1,128 +1,99 @@
 <template>
-  <div id="curriculo-content" class="max-w-4xl mx-auto px-4 py-8 bg-white">
-    <!-- Header -->
-    <header class="mb-4">
-      <div class="flex items-start gap-4 mb-3">
-        <img 
-          :src="personalData.profileImage" 
-          :alt="`Profile Picture of ${personalData.fullName}`"
-          class="w-24 h-24 rounded-full flex-shrink-0"
-        />
+  <div class="resume-container">
+    <div class="resume-content">
+      <!-- Header com foto e info -->
+      <header class="header">
+        <div class="header-content">
+          <div class="profile-section">
+            <img 
+              :src="personalData.profileImage" 
+              :alt="`Profile Picture of ${personalData.fullName}`"
+              class="profile-photo"
+            />
+            <div class="header-text">
+              <h1>{{ personalData.fullName }}</h1>
+              <p class="title">{{ personalData.title }}</p>
+            </div>
+          </div>
+          <div class="contact-info">
+            <p><strong>Telefone:</strong> {{ personalData.phone }}</p>
+            <p><strong>Email:</strong> {{ personalData.email }}</p>
+            <p><strong>GitHub:</strong> <a :href="personalData.github" target="_blank">{{ personalData.github.split('/').pop() }}</a></p>
+            <p><strong>LinkedIn:</strong> <a :href="personalData.linkedin" target="_blank">{{ personalData.linkedin.split('/').pop() }}</a></p>
+          </div>
+        </div>
+      </header>
 
-        <!-- Personal Information -->
-        <div class="mt-2">
-          <h1 class="text-2xl font-bold text-gray-900">{{ personalData.fullName }}</h1>
-          <h2 class="text-sm font-medium text-purple-600 mt-0.5">{{ personalData.title }}</h2>
+      <!-- Conteúdo principal em 2 colunas -->
+      <div class="content-grid">
+        <!-- Coluna esquerda -->
+        <div class="left-column">
+          <!-- Resumo profissional -->
+          <section class="section">
+            <h2>{{ sectionTitles.summary }}</h2>
+            <p>
+              {{ summaryData }}
+            </p>
+          </section>
+
+          <!-- Habilidades -->
+          <section class="section">
+            <h2>{{ sectionTitles.skills }}</h2>
+            <div class="skills-grid">
+              <div class="skill-item" v-for="(skillCategory, index) in skillsData" :key="index">
+                <h4>{{ skillCategory.category }}</h4>
+                <p>
+                  <span 
+                    v-for="(skill, skillIndex) in skillCategory.skill_list" 
+                    :key="skillIndex"
+                    :class="[
+                      'text-sm font-medium px-3 py-1 rounded-full',
+                      skill.level === 'primary' ? 'bg-purple-100 text-purple-800' : 'bg-gray-200 text-gray-800'
+                    ]"
+                  >
+                    {{ skill.name }}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Coluna direita -->
+        <div class="right-column">
+          <!-- Experiência -->
+          <section class="section">
+            <h2>{{ sectionTitles.experience }}</h2>
+            <div class="job" v-for="(job, index) in experienceData" :key="index">
+              <div class="job-header">
+                <h3>{{ job.title }}</h3>
+                <span class="date-badge">{{ job.startDate }} – {{ job.endDate }}</span>
+              </div>
+              <p class="company">{{ job.company }}</p>
+              <p class="location">{{ job.location }}</p>
+              <ul>
+                <li v-for="(highlight, highlightIndex) in job.highlights" :key="highlightIndex">
+                  {{ highlight }}
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Educação -->
+          <section class="section">
+            <h2>{{ sectionTitles.education }}</h2>
+            <div class="education" v-for="(edu, index) in educationData" :key="index">
+              <div class="edu-header">
+                <h3>{{ edu.degree }}</h3>
+                <span class="date-badge">{{ edu.startDate }} – {{ edu.endDate }}</span>
+              </div>
+              <p class="company">{{ edu.institution }}</p>
+              <p class="location">{{ edu.location }}</p>
+            </div>
+          </section>
         </div>
       </div>
-
-      <!-- Contact Information -->
-      <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 text-[11px] text-gray-600">
-        <a 
-          :href="`mailto:${personalData.email}`" 
-          class="hover:text-purple-600 transition-colors duration-200"
-        >
-          <i class="bi bi-envelope-at inline-block icon"></i>
-          {{ personalData.email }}
-        </a>
-        <a 
-          :href="personalData.github" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          class="hover:text-purple-600 transition-colors duration-200"
-        >
-          <i class="bi bi-github inline-block icon"></i>
-          {{ personalData.github.split('/').pop() }}
-        </a>
-        <span class="flex items-center">
-          <i class="bi bi-telephone inline-block icon"></i>
-          {{ personalData.phone }}
-        </span>
-        <a 
-          :href="personalData.linkedin" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          class="hover:text-purple-600 transition-colors duration-200"
-        >
-          <i class="bi bi-linkedin inline-block icon"></i>
-          {{ personalData.linkedin.split('/').pop() }}
-        </a>
-        <span class="flex items-center">
-          <i class="bi bi-geo-alt inline-block icon"></i>
-          {{ personalData.location }}
-        </span>
-      </div>
-    </header>
-
-    <hr class="custom-hr" />
-
-    <!-- Summary Section -->
-    <section class="mb-3">
-      <h3 class="text-base font-bold border-purple-600 pb-1 mb-2">{{ sectionTitles.summary }}</h3>
-      <p class="text-gray-700 leading-tight text-xs">
-        {{ summaryData }}
-      </p>
-    </section>
-
-    <hr class="custom-hr" />
-
-    <!-- Skills Section -->
-    <section class="mb-3">
-      <h3 class="text-base font-bold border-purple-600 pb-1 mb-2">{{ sectionTitles.skills }}</h3>
-      
-      <div v-for="(skillCategory, index) in skillsData" :key="index" :class="{ 'mb-2': index < skillsData.length - 1 }">
-        <h4 class="text-xs font-semibold text-gray-800 mb-2">{{ skillCategory.category }}</h4>
-        <div class="flex flex-wrap gap-1">
-          <span 
-            v-for="(skill, skillIndex) in skillCategory.skill_list" 
-            :key="skillIndex"
-            :class="[
-              'text-[11px] font-medium px-2 py-0.5 rounded-full',
-              skill.level === 'primary' ? 'bg-purple-100 text-purple-800' : 'bg-gray-200 text-gray-800'
-            ]"
-          >
-            {{ skill.name }}
-          </span>
-        </div>
-      </div>
-    </section>
-
-    <hr class="custom-hr" />
-
-    <!-- Experience Section -->
-    <section class="mb-3">
-      <h3 class="text-base font-bold border-purple-600 pb-1 mb-2">{{ sectionTitles.experience }}</h3>
-      
-      <div v-for="(job, index) in experienceData" :key="index" :class="{ 'mb-4': index < experienceData.length - 1 }">
-        <h4 class="text-sm font-bold text-gray-900">{{ job.title }}</h4>
-        <div class="flex justify-between items-center flex-wrap gap-2">
-          <span class="text-xs font-semibold text-purple-700">{{ job.company }}</span>
-          <span class="text-[11px] font-medium text-gray-600">{{ job.startDate }} – {{ job.endDate }}</span>
-        </div>
-        <p class="text-[11px] text-gray-500 mb-1">{{ job.location }}</p>
-        <ul class="list-disc list-outside pl-4 space-y-0.5 text-gray-700 text-xs">
-          <li v-for="(highlight, highlightIndex) in job.highlights" :key="highlightIndex">
-            {{ highlight }}
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <hr class="custom-hr" />
-    
-    <!-- Education Section -->
-    <section>
-      <h3 class="text-base font-bold border-purple-600 pb-1 mb-2">{{ sectionTitles.education }}</h3>
-
-      <div v-for="(edu, index) in educationData" :key="index" :class="{ 'mb-3': index < educationData.length - 1 }">
-        <h4 class="text-sm font-bold text-gray-900">{{ edu.degree }}</h4>
-        <div class="flex justify-between items-center flex-wrap gap-2">
-          <span class="text-xs font-semibold text-purple-700">{{ edu.institution }}</span>
-          <span class="text-[11px] font-medium text-gray-600">{{ edu.startDate }} – {{ edu.endDate }}</span>
-        </div>
-        <p class="text-[11px] text-gray-500">{{ edu.location }}</p>
-      </div>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -201,39 +172,216 @@ onMounted(async () => {
   box-sizing: border-box;
 }
 
-#curriculo-content {
-  margin-top: 0px;
-  padding: 2rem 1rem;
+.resume-container {
+  width: 210mm;
+  height: 297mm;
+  margin: 0 auto;
+  background: white;
+  padding: 15mm;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
 }
 
-header {
-  margin-bottom: 1rem;
+.resume-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5mm;
 }
 
-.icon {
-  width: 1rem;
-  height: 1rem;
-  margin-right: 0.375rem;
-  vertical-align: middle;
+.header {
+  border-bottom: 2.5px solid #7c2d9f;
+  padding-bottom: 6mm;
+  page-break-inside: avoid;
+  page-break-after: avoid;
 }
 
-hr.custom-hr {
-  border: 0;
-  height: 1px;
-  background-image: linear-gradient(to right, #9333ea, #9333ea);
-  margin: 1rem 0;
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12mm;
 }
 
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 10mm;
+}
+
+.profile-photo {
+  width: 45mm;
+  height: 45mm;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #7c2d9f;
+  flex-shrink: 0;
+}
+
+.header-text h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #7c2d9f;
+  margin-bottom: 3px;
+}
+
+.title {
+  font-size: 15px;
+  color: #666;
+  font-weight: 500;
+}
+
+.contact-info {
+  text-align: right;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.contact-info p {
+  margin: 2px 0;
+  line-height: 1.4;
+}
+
+.contact-info a {
+  color: #7c2d9f;
+  text-decoration: none;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8mm;
+  flex: 1;
+}
+
+.section {
+  margin-bottom: 5mm;
+  page-break-inside: avoid;
+}
+
+.section h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #7c2d9f;
+  margin-bottom: 3mm;
+  border-bottom: 1.5px solid #ddd;
+  padding-bottom: 2mm;
+  page-break-after: avoid;
+}
+
+.section p {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 2mm;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3mm;
+}
+
+.skill-item {
+  background: #f9f5fb;
+  padding: 3mm 4mm;
+  border-radius: 3px;
+  border-left: 3px solid #7c2d9f;
+  page-break-inside: avoid;
+}
+
+.skill-item h4 {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7c2d9f;
+  margin-bottom: 2mm;
+}
+
+.skill-item p {
+  font-size: 11px;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+}
+
+.skill-item span {
+  display: inline-block;
+  background: #e9d5ff !important;
+  color: #6b21a8 !important;
+  padding: 2mm 3mm !important;
+  border-radius: 3px !important;
+  font-size: 10px !important;
+}
+
+.job,
+.education {
+  margin-bottom: 4mm;
+  page-break-inside: avoid;
+  padding-bottom: 2mm;
+  border-bottom: 0.5px solid #f0f0f0;
+}
+
+.job-header,
+.edu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4mm;
+  margin-bottom: 1mm;
+  page-break-after: avoid;
+}
+
+.job h3,
+.education h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  flex: 1;
+}
+
+.date-badge {
+  font-size: 11px;
+  color: #7c2d9f;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.company {
+  font-size: 11px;
+  color: #7c2d9f;
+  font-weight: 500;
+  margin-bottom: 1mm !important;
+  page-break-after: avoid;
+}
+
+.location {
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 1mm !important;
+  page-break-after: avoid;
+}
+
+.job ul {
+  margin-left: 5mm;
+  font-size: 11px;
+  padding: 0;
+}
+
+.job li {
+  margin-bottom: 1mm;
+  line-height: 1.4;
+  list-style-position: outside;
+}
+
+/* Print styles */
 @media print {
-  #curriculo-content {
-    max-width: 100%;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-shadow: none;
-  }
-  
-  header {
-    margin-bottom: 1rem !important;
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: white;
   }
 
   * {
@@ -242,14 +390,32 @@ hr.custom-hr {
     color-adjust: exact !important;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    page-break-after: avoid !important;
-    break-after: avoid !important;
+  .resume-container {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 15mm;
+    background: white;
+    box-shadow: none;
+    page-break-after: always;
   }
 
-  section {
+  .header,
+  .section,
+  .job,
+  .education,
+  .skill-item {
     page-break-inside: avoid !important;
-    break-inside: avoid !important;
   }
+
+  .content-grid {
+    page-break-inside: avoid;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 0;
+  padding: 0;
 }
 </style>
