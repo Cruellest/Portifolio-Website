@@ -4,15 +4,18 @@
     :class="[sizeClasses.navbar]"
   >
     <div :class="['navbar-start gap-1 sm:gap-2', sizeClasses.gap]">
+      <!-- Full name (hidden on small screens) -->
       <button 
         :class="['btn btn-secondary rounded-full font-bold text-white', sizeClasses.namebreakpoint, sizeClasses.nameBtn]"
       >
-        Gabriel Paes Duarte Baltazar
+        {{ personalData.fullName }}
       </button>
+
+      <!-- Short name (visible on small screens) -->
       <button 
         :class="['btn btn-secondary rounded-full font-bold text-white', sizeClasses.breakpoint, sizeClasses.nameBtn]"
       >
-        Gabriel Paes
+        {{ getShortName(personalData.fullName) }}
       </button>
 
       <!-- Search button -->
@@ -41,18 +44,21 @@
       </div>
     </div>
 
-    <!-- Center: Empty for Spacing (remember why gabriel) -->
+    <!-- Center: Empty for Spacing -->
     <div class="navbar-center"></div>
 
     <!-- Right side: Navigation shortcuts + Download button -->
     <div :class="['navbar-end gap-1 sm:gap-2', sizeClasses.gap]">
-      <!-- Desktop navigation (hidden on small screens) -->
+      <!-- Desktop navigation (hidden on small screens) - Dinâmico -->
       <div :class="['hidden gap-1 sm:gap-2', sizeClasses.navbreakpoint, sizeClasses.gap]">
-        <a href="#summary" :class="['btn btn-ghost rounded-full', sizeClasses.navBtn]">Summary</a>
-        <a href="#skills" :class="['btn btn-ghost rounded-full', sizeClasses.navBtn]">Skills</a>
-        <a href="#projects" :class="['btn btn-ghost rounded-full', sizeClasses.navBtn]">Projects</a>
-        <a href="#work-experience" :class="['btn btn-ghost rounded-full whitespace-nowrap', sizeClasses.navBtn]">Work</a>
-        <a href="#education" :class="['btn btn-ghost rounded-full', sizeClasses.navBtn]">Edu</a>
+        <a 
+          v-for="(section, key) in navigationSections" 
+          :key="key"
+          :href="`#${key}`"
+          :class="['btn btn-ghost rounded-full whitespace-nowrap', sizeClasses.navBtn]"
+        >
+          {{ getResponsiveName(section) }}
+        </a>
       </div>
       
       <!-- Download button -->
@@ -62,7 +68,7 @@
         </svg>
       </button>
 
-      <!-- Mobile menu dropdown -->
+      <!-- Mobile menu dropdown - Dinâmico -->
       <div :class="['dropdown dropdown-end', sizeClasses.menubreakpoint]">
         <label tabindex="0" :class="['btn btn-ghost btn-circle rounded-full flex-shrink-0', sizeClasses.menuBtn]">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,11 +76,9 @@
           </svg>
         </label>
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48">
-          <li><a href="#summary" class="rounded-full">Summary</a></li>
-          <li><a href="#skills" class="rounded-full">Skills</a></li>
-          <li><a href="#projects" class="rounded-full">Projects</a></li>
-          <li><a href="#work-experience" class="rounded-full">Work Experience</a></li>
-          <li><a href="#education" class="rounded-full">Education</a></li>
+          <li v-for="(section, key) in navigationSections" :key="key">
+            <a :href="`#${key}`" class="rounded-full">{{ section }}</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -83,6 +87,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { getPersonalData, getSectionsData } from '../controllers/json-data-controller'
 
 const props = defineProps({
   size: {
@@ -95,6 +100,25 @@ const props = defineProps({
 const isSearchOpen = ref(false)
 const searchQuery = ref('')
 const searchInput = ref(null)
+
+// Dados da store
+const personalData = computed(() => getPersonalData())
+const navigationSections = computed(() => getSectionsData())
+
+// Função para obter nome curto (Primeiro nome + Sobrenome)
+const getShortName = (fullName) => {
+  const parts = fullName.trim().split(' ')
+  if (parts.length >= 2) {
+    return `${parts[0]} ${parts[parts.length - 1]}`
+  }
+  return parts[0]
+}
+
+// Função para reduzir nomes responsivamente
+const getResponsiveName = (sectionName) => {
+  // Remove palavras comuns e abrevia
+  return sectionName
+}
 
 const sizeClasses = computed(() => {
   const sizes = {
@@ -137,8 +161,8 @@ const sizeClasses = computed(() => {
       input: 'input-md w-48',
       breakpoint: 'lg:hidden',
       namebreakpoint: 'lg:flex hidden',
-      navbreakpoint: 'md:flex',
-      menubreakpoint: 'md:hidden'
+      navbreakpoint: 'lg:flex',
+      menubreakpoint: 'lg:hidden'
     },
     xl: {
       navbar: 'px-4 sm:px-8 py-4 sm:py-5',

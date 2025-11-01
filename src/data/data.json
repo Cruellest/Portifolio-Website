@@ -1,0 +1,106 @@
+{
+  "personal": {
+    "fullName": "Gabriel Paes Duarte Baltazar",
+    "title": "Software Engineer",
+    "profileImage": "https://avatars.githubusercontent.com/u/57719450?s=400&u=f96a46cd6fd5cdb0f882658d7376dcceda1b44c2&v=4",
+    "email": "gabriel81523642@gmail.com",
+    "phone": "+55 67 999841905",
+    "location": "Campo Grande, MS, Brazil",
+    "github": "https://github.com/Cruellest",
+    "linkedin": "https://www.linkedin.com/in/cruellest"
+  },
+  "section_titles": {
+    "summary": "Professional Summary",
+    "skills": "Technical Skills",
+    "experience": "Work Experience",
+    "education": "Education"
+  },
+  "summary": "Software Engineer with hands-on experience in Full Stack Development, Software Architecture, DevOps, and Testing. Currently pursuing a Bachelor of Science in Software Engineering at the Universidade Federal do Mato Grosso do Sul (UFMS) to deepen my theoretical foundation.",
+  "skills": [
+    {
+      "category": "Languages & Frameworks",
+      "skill_list": [
+        {"name": "Python", "level": "primary"},
+        {"name": "JavaScript", "level": "primary"},
+        {"name": "Java", "level": "primary"},
+        {"name": "Flutter", "level": "primary"},
+        {"name": "Objective C/C++", "level": "primary"},
+        {"name": "React", "level": "secondary"},
+        {"name": "React Native", "level": "secondary"},
+        {"name": "Vue.js", "level": "secondary"},
+        {"name": "FastApi", "level": "secondary"},
+        {"name": "Flask", "level": "secondary"}
+      ]
+    },
+    {
+      "category": "DevOps, Cloud & Virtualization",
+      "skill_list": [
+        {"name": "Docker", "level": "primary"},
+        {"name": "Kubernetes", "level": "primary"},
+        {"name": "Podman", "level": "primary"},
+        {"name": "Ansible", "level": "primary"},
+        {"name": "Harbor", "level": "primary"},
+        {"name": "Argo CD", "level": "primary"},
+        {"name": "KVM", "level": "secondary"},
+        {"name": "QEMU", "level": "secondary"}
+      ]
+    },
+    {
+      "category": "Methodologies, Tools & Concepts",
+      "skill_list": [
+        {"name": "Scrum", "level": "primary"},
+        {"name": "Kanban", "level": "primary"},
+        {"name": "GIT", "level": "primary"},
+        {"name": "Lean Inception", "level": "primary"},
+        {"name": "Planning Poker", "level": "primary"},
+        {"name": "DevOps", "level": "secondary"},
+        {"name": "Software Architecture", "level": "secondary"},
+        {"name": "Requirements Engineering", "level": "secondary"},
+        {"name": "Software Testing", "level": "secondary"},
+        {"name": "CI/CD", "level": "secondary"},
+        {"name": "Microservices", "level": "secondary"},
+        {"name": "Agile Methodologies", "level": "secondary"}
+      ]
+    },
+    {
+      "category": "Languages",
+      "skill_list": [
+        {"name": "Portuguese (Native)", "level": "primary"},
+        {"name": "English (Fluent)", "level": "primary"}
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Full Stack Developer / Software Engineer",
+      "company": "Ledes (Laboratório de Desenvolvimento de Software)",
+      "location": "Campo Grande, MS, Brazil",
+      "startDate": "June 2024",
+      "endDate": "Current",
+      "highlights": [
+        "Developing and maintaining client-driven web applications using Vue and Python, focusing on scalable system architecture and clean code. Implementing containerization and contributing to orchestration for staging and production environments.",
+        "Actively participating in Scrum ceremonies to align development efforts, consistently meeting all weekly deadlines for client-driven features."
+      ]
+    },
+    {
+      "title": "Full Stack Developer / Project Manager",
+      "company": "Pet Sistemas (Programa de Educação Tutorial)",
+      "location": "Campo Grande, MS, Brazil",
+      "startDate": "August 2023",
+      "endDate": "Current",
+      "highlights": [
+        "Leading project management for software initiatives and developing cross-platform mobile applications for the academic community using React Native.",
+        "Implementing unit and integration testing routines alongside authoring technical documentation to ensure high application quality, maintainability, and knowledge transfer."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Software Engineering",
+      "institution": "Universidade Federal de Mato Grosso do Sul (UFMS)",
+      "location": "Campo Grande, MS, Brazil",
+      "startDate": "Aug 2023",
+      "endDate": "Expected December 2026"
+    }
+  ]
+}
