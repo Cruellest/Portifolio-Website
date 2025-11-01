@@ -13,13 +13,27 @@
             <div class="header-text">
               <h1>{{ personalData.fullName }}</h1>
               <p class="title">{{ personalData.title }}</p>
+              <div class="contact-info">
+                <p>
+                  <i class="bi bi-telephone-fill contact-icon" aria-hidden="true"></i>
+                  <span class="sr-only">Telefone:</span>
+                  {{ personalData.phone }}
+                </p>
+                <p>
+                  <i class="bi bi-envelope-fill contact-icon" aria-hidden="true"></i>
+                  <span class="sr-only">Email:</span>
+                  {{ personalData.email }}
+                </p>
+                <p>
+                  <i class="bi bi-github contact-icon" aria-hidden="true"></i>
+                  <a :href="personalData.github" target="_blank" rel="noopener" :title="personalData.github">{{ githubDisplay }}</a>
+                </p>
+                <p>
+                  <i class="bi bi-linkedin contact-icon" aria-hidden="true"></i>
+                  <a :href="personalData.linkedin" target="_blank" rel="noopener" :title="personalData.linkedin">{{ linkedinDisplay }}</a>
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="contact-info">
-            <p><strong>Telefone:</strong> {{ personalData.phone }}</p>
-            <p><strong>Email:</strong> {{ personalData.email }}</p>
-            <p><strong>GitHub:</strong> <a :href="personalData.github" target="_blank">{{ personalData.github.split('/').pop() }}</a></p>
-            <p><strong>LinkedIn:</strong> <a :href="personalData.linkedin" target="_blank">{{ personalData.linkedin.split('/').pop() }}</a></p>
           </div>
         </div>
       </header>
@@ -163,7 +177,31 @@ onMounted(async () => {
     router.push('/')
   })
 })
+
+// helper para exibir URL sem protocolo/www/query/hash e sem barra final
+const urlDisplay = (url) => {
+  if (!url) return ''
+  try {
+    const u = new URL(url)
+    const host = u.hostname.replace(/^www\./, '')
+    const path = u.pathname.replace(/\/+$/, '')
+    return path && path !== '/' ? `${host}${path}` : host
+  } catch {
+    return url
+      .replace(/^https?:\/\//i, '')
+      .replace(/^www\./i, '')
+      .replace(/[\?#].*$/, '')
+      .replace(/\/+$/, '')
+  }
+}
+
+const githubDisplay = computed(() => urlDisplay(personalData.value?.github || ''))
+const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin || ''))
 </script>
+
+<style>
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+</style>
 
 <style scoped>
 * {
@@ -199,7 +237,7 @@ onMounted(async () => {
 
 .header-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* was space-between */
   align-items: flex-start;
   gap: 12mm;
 }
@@ -233,7 +271,7 @@ onMounted(async () => {
 }
 
 .contact-info {
-  text-align: right;
+  text-align: left; /* was right */
   font-size: 12px;
   flex-shrink: 0;
 }
@@ -241,11 +279,34 @@ onMounted(async () => {
 .contact-info p {
   margin: 2px 0;
   line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-start; /* was flex-end */
 }
 
 .contact-info a {
   color: #7c2d9f;
   text-decoration: none;
+  overflow-wrap: anywhere; /* allow long URLs to wrap */
+}
+
+.contact-icon {
+  color: #7c2d9f;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 .content-grid {
