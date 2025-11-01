@@ -62,7 +62,7 @@
                     :key="skillIndex"
                     :class="[
                       'text-sm font-medium px-3 py-1 rounded-full',
-                      skill.level === 'primary' ? 'bg-purple-100 text-purple-800' : 'bg-gray-200 text-gray-800'
+                      skill.level === 'primary' ? 'bg-primary/10 text-primary' : 'bg-base-300 text-base-content/80'
                     ]"
                   >
                     {{ skill.name }}
@@ -229,7 +229,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 }
 
 .header {
-  border-bottom: 2.5px solid #7c2d9f;
+  border-bottom: 2.5px solid var(--color-primary);
   padding-bottom: 6mm;
   page-break-inside: avoid;
   page-break-after: avoid;
@@ -253,14 +253,14 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
   height: 45mm;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #7c2d9f;
+  border: 3px solid var(--color-primary);
   flex-shrink: 0;
 }
 
 .header-text h1 {
   font-size: 24px;
   font-weight: 700;
-  color: #7c2d9f;
+  color: var(--color-primary);
   margin-bottom: 3px;
 }
 
@@ -286,13 +286,13 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 }
 
 .contact-info a {
-  color: #7c2d9f;
+  color: var(--color-primary);
   text-decoration: none;
   overflow-wrap: anywhere; /* allow long URLs to wrap */
 }
 
 .contact-icon {
-  color: #7c2d9f;
+  color: var(--color-primary);
   font-size: 14px;
   line-height: 1;
 }
@@ -324,9 +324,9 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 .section h2 {
   font-size: 15px;
   font-weight: 700;
-  color: #7c2d9f;
+  color: var(--color-primary);
   margin-bottom: 3mm;
-  border-bottom: 1.5px solid #ddd;
+  border-bottom: 1.5px solid var(--color-base-300);
   padding-bottom: 2mm;
   page-break-after: avoid;
 }
@@ -344,17 +344,19 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 }
 
 .skill-item {
-  background: #f9f5fb;
+  background: color-mix(in oklch, var(--color-primary) 10%, var(--color-base-100));
+  /* fallback se color-mix não for suportado */
+  background: var(--color-base-100);
   padding: 3mm 4mm;
   border-radius: 3px;
-  border-left: 3px solid #7c2d9f;
+  border-left: 3px solid var(--color-primary);
   page-break-inside: avoid;
 }
 
 .skill-item h4 {
   font-size: 11px;
   font-weight: 600;
-  color: #7c2d9f;
+  color: var(--color-primary);
   margin-bottom: 2mm;
 }
 
@@ -368,8 +370,9 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 
 .skill-item span {
   display: inline-block;
-  background: #e9d5ff !important;
-  color: #6b21a8 !important;
+  /* reforça paleta do tema na impressão */
+  background: color-mix(in oklch, var(--color-primary) 20%, transparent) !important;
+  color: var(--color-primary) !important;
   padding: 2mm 3mm !important;
   border-radius: 3px !important;
   font-size: 10px !important;
@@ -404,7 +407,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 
 .date-badge {
   font-size: 11px;
-  color: #7c2d9f;
+  color: var(--color-primary);
   font-weight: 500;
   white-space: nowrap;
   flex-shrink: 0;
@@ -412,7 +415,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 
 .company {
   font-size: 11px;
-  color: #7c2d9f;
+  color: var(--color-primary);
   font-weight: 500;
   margin-bottom: 1mm !important;
   page-break-after: avoid;

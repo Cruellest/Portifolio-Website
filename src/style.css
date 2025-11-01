@@ -9,18 +9,29 @@
   prefersdark: true;
   color-scheme: light;
 
-  --color-base-100: oklch(0.9612 0 0);
-  --color-base-200: oklch(0.83 0.14 285);
-  --color-base-300: oklch(0.72 0.2 285);
-  --color-base-content: oklch(0.18 0.12 285);
-  --color-primary: oklch(0.46 0.38 280);
-  --color-primary-content: oklch(0.99 0.005 280);
-  --color-secondary: oklch(0.6 0.32 290);
-  --color-secondary-content: oklch(0.99 0.005 290);
-  --color-accent: oklch(0.464 0 0);
-  --color-accent-content: oklch(0.99 0.005 275);
-  --color-neutral: oklch(0.52 0.15 283);
-  --color-neutral-content: oklch(0.99 0.005 283);
+  /* Base e texto (fundo branco e textos #333) */
+  --color-base-100: oklch(0.99 0 0);       /* #ffffff */
+  --color-base-200: oklch(0.96 0.02 300);  /* #f9f5fb aproximado */
+  --color-base-300: oklch(0.88 0 0);       /* #dddddd aproximado */
+  --color-base-content: oklch(0.35 0 0);   /* #333333 aproximado */
+
+  /* Primária (roxo do currículo #7c2d9f) */
+  --color-primary: oklch(0.55 0.20 300);         /* #7c2d9f aproximado */
+  --color-primary-content: oklch(0.99 0 0);      /* branco para contraste */
+
+  /* Secundária (roxo escuro #6b21a8) */
+  --color-secondary: oklch(0.50 0.23 305);       /* #6b21a8 aproximado */
+  --color-secondary-content: oklch(0.99 0 0);    /* branco */
+
+  /* Acento (lilás claro #e9d5ff) */
+  --color-accent: oklch(0.93 0.05 300);          /* #e9d5ff aproximado */
+  --color-accent-content: oklch(0.35 0.03 300);  /* texto escuro/lilás para contraste */
+
+  /* Neutros (suporte, pouco usados no currículo) */
+  --color-neutral: oklch(0.28 0.05 300);         /* neutro escuro com leve matiz roxo */
+  --color-neutral-content: oklch(0.98 0 0);      /* quase branco */
+
+  /* Mantidos (padrões) */
   --color-info: oklch(0.58 0.28 200);
   --color-info-content: oklch(0.99 0.005 200);
   --color-success: oklch(0.6816 0.1412 156.04);

@@ -1,7 +1,7 @@
 <template>
-    <h1>Homepage</h1>
+    <Summary />
 </template>
 
 <script setup lang="ts">
-
+import Summary from '../components/summary.vue'
 </script>
