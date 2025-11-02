@@ -185,10 +185,10 @@
         </ul>
       </div>
 
-      <!-- DOWNLOAD BUTTON -->
+      <!-- DOWNLOAD BUTTON (desktop only) -->
       <button 
         @click="downloadPDF"
-        :class="['btn btn-ghost btn-circle rounded-full flex-shrink-0', sizeClasses.downloadBtn]"
+        :class="['btn btn-ghost btn-circle rounded-full flex-shrink-0 hidden', sizeClasses.downloadBtn, sizeClasses.navbreakpoint]"
         title="Download resume as PDF"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,6 +204,9 @@
           </svg>
         </label>
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48">
+          <li class="menu-title">
+            <span>{{ menuTexts.sections }}</span>
+          </li>
           <li v-for="(section, key) in navSectionsPrimary" :key="key">
             <a
               :href="`#${key}`"
@@ -212,6 +215,20 @@
             >
               {{ section }}
             </a>
+          </li>
+          <li class="menu-title pt-2">
+            <span>{{ menuTexts.actions }}</span>
+          </li>
+          <li>
+            <button
+              class="rounded-full hover:bg-base-200 hover:text-base-content transition-colors duration-200"
+              @click="downloadPDF"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              {{ menuTexts.downloadResume }}
+            </button>
           </li>
         </ul>
       </div>
@@ -624,6 +641,12 @@ const themeTexts = computed(() => appData?.ui?.theme ?? {
   auto: 'Auto',
   light: 'Claro',
   dark: 'Escuro'
+})
+
+const menuTexts = computed(() => appData?.ui?.menu ?? {
+  sections: 'Sections',
+  actions: 'Actions',
+  downloadResume: 'Download Resume'
 })
 </script>
 

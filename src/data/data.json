@@ -158,6 +158,11 @@
       "auto": "Auto",
       "light": "Light",
       "dark": "Dark"
+    },
+    "menu": {
+      "sections": "Sections",
+      "actions": "Actions",
+      "downloadResume": "Download Resume"
     }
   }
 }

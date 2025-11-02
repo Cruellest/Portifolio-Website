@@ -1,22 +1,22 @@
 {
   "personal": {
     "fullName": "Gabriel Paes Duarte Baltazar",
-    "title": "Software Engineer",
+    "title": "Engenheiro de Software",
     "profileImage": "https://avatars.githubusercontent.com/u/57719450?s=400&u=f96a46cd6fd5cdb0f882658d7376dcceda1b44c2&v=4",
     "email": "gabriel81523642@gmail.com",
     "phone": "+55 67 999841905",
-    "location": "Campo Grande, MS, Brazil",
+    "location": "Campo Grande, MS, Brasil",
     "github": "https://github.com/Cruellest",
     "linkedin": "https://www.linkedin.com/in/cruellest"
   },
   "section_titles": {
     "summary": "Resumo Profissional",
     "skills": "Habilidades Técnicas",
-    "experience": "Experiência Profissional",
+    "experience": "Experiência de Trabalho",
     "education": "Formação",
     "projects": "Projetos"
   },
-  "summary": "Software Engineer com experiência prática em Desenvolvimento Full Stack, Arquitetura de Software, DevOps e Testes. Atualmente, estou cursando Bacharelado em Engenharia de Software na Universidade Federal de Mato Grosso do Sul (UFMS) para aprofundar minha base teórica.",
+  "summary": "Engenheiro de Software com experiência prática em Desenvolvimento Full Stack, Arquitetura de Software, DevOps e Testes. Atualmente cursando Bacharelado em Engenharia de Software na Universidade Federal do Mato Grosso do Sul (UFMS) para aprofundar minha base teórica.",
   "skills": [
     {
       "category": "Linguagens & Frameworks",
@@ -36,7 +36,7 @@
       ]
     },
     {
-      "category": "DevOps, Cloud & Virtualização",
+      "category": "DevOps, Nuvem & Virtualização",
       "skill_list": [
         {"name": "Docker", "level": "primary"},
         {"name": "Kubernetes", "level": "primary"},
@@ -59,14 +59,14 @@
         {"name": "DevOps", "level": "primary"},
         {"name": "Arquitetura de Software", "level": "primary"},
         {"name": "Engenharia de Requisitos", "level": "secondary"},
-        {"name": "Testes de Software", "level": "primary"},
+        {"name": "Teste de Software", "level": "primary"},
         {"name": "CI/CD", "level": "primary"},
-        {"name": "Microserviços", "level": "primary"},
+        {"name": "Microsserviços", "level": "primary"},
         {"name": "Metodologias Ágeis", "level": "primary"}
       ]
     },
     {
-      "category": "Linguagens",
+      "category": "Idiomas",
       "skill_list": [
         {"name": "Português (Nativo)", "level": "primary"},
         {"name": "Inglês (Fluente)", "level": "primary"}
@@ -78,60 +78,58 @@
       {
         "title": "Desenvolvedor Full Stack / Engenheiro de Software",
         "company": "Ledes (Laboratório de Desenvolvimento de Software)",
-        "location": "Campo Grande, MS, Brazil",
-        "startDate": "junho de 2024",
+        "location": "Campo Grande, MS, Brasil",
+        "startDate": "Junho 2024",
         "endDate": "Atual",
         "highlights": [
-          "Desenvolvendo e mantendo aplicações web orientadas ao cliente utilizando Vue e Python, focando em arquitetura de sistemas escaláveis e código limpo. Implementando containerização e contribuindo para a orquestração para ambientes de staging e produção.",
-          "Participando ativamente de cerimônias Scrum para alinhar esforços de desenvolvimento, consistentemente cumprindo todos os prazos semanais para recursos orientados ao cliente."
+          "Desenvolvendo e mantendo aplicações web para clientes usando Vue e Python, com foco em arquitetura de sistemas escalável e código limpo. Implementando containerização e contribuindo para a orquestração de ambientes de homologação e produção.",
+          "Participando ativamente das cerimônias Scrum para alinhar os esforços de desenvolvimento, cumprindo consistentemente todos os prazos semanais para as funcionalidades dos clientes."
         ]
       },
       {
-        "title": "Desenvolvedor Full Stack / Gerente de Projeto",
+        "title": "Desenvolvedor Full Stack / Gerente de Projetos",
         "company": "Pet Sistemas (Programa de Educação Tutorial)",
-        "location": "Campo Grande, MS, Brazil",
-        "startDate": "agosto de 2023",
+        "location": "Campo Grande, MS, Brasil",
+        "startDate": "Agosto 2023",
         "endDate": "Atual",
         "highlights": [
-          "Liderando gestão de projetos para iniciativas de software e desenvolvendo aplicações mobile cross-platform para a comunidade acadêmica utilizando React Native.",
-          "Implementando rotinas de testes unitários e de integração, juntamente com a criação de documentação técnica para garantir alta qualidade de aplicação, manutenibilidade e transferência de conhecimento."
+          "Liderando o gerenciamento de projetos de software e desenvolvendo aplicativos móveis multiplataforma para a comunidade acadêmica usando React Native.",
+          "Implementando rotinas de testes unitários e de integração, além de elaborar documentação técnica para garantir alta qualidade, manutenibilidade e transferência de conhecimento das aplicações."
         ]
       }
     ],
     "projects": [
       {
-        "name": "Site Portfólio",
-        "description": "Site portfólio construído com Vue 3 + daisyUI mostrando projetos, currículo e experimentos de UI interativos.",
-        "link": "https://github.com/Cruellest"
+        "name": "Site de Portfólio",
+        "description": "Portfólio pessoal construído com Vue 3 + daisyUI mostrando projetos, currículo e experimentos de UI interativos, totalmente personalizável por um único arquivo JSON.",
+        "link": "https://github.com/Cruellest/Portifolio-Website"
       },
       {
-        "name": "Pipeline CI/CD",
-        "description": "Pipeline GitOps com Argo CD, Docker e Kubernetes para implantação e rollbacks automatizados.",
-        "link": "https://argo-cd.readthedocs.io/"
+        "name": "Quati Saúde",
+        "description": "Plataforma com IA construída em parceria com a FUNDECT e PGE/MS para auxiliar e automatizar processos jurídicos e fluxos de documentos, incluindo pipelines de CD com Argo CD, design de solução, arquitetura de software, engenharia de requisitos e implementação de microsserviços.",
+        "link": "https://www.pge.ms.gov.br/laboratorio-de-inovacao-apresenta-nova-solucao-tecnologica-para-fortalecer-a-defesa-do-estado-em-acoes-judiciais-da-saude/"
       },
       {
-        "name": "PET UFMS Mobile",
-        "description": "Aplicativo mobile para a comunidade acadêmica construído com React Native e um backend Python.",
-        "link": "https://pet.ufms.br/"
+        "name": "Food Battle: This or That?",
+        "description": "Jogo de votação A/B baseado em deslizar, onde você escolhe entre dois pratos e compartilha preferências. Construído com React e Firebase, com uma versão web responsiva hospedada no Firebase.",
+        "link": "https://food-battle-this-or-that.web.app/"
       }
     ]
   },
-  "education": {
-    "degrees": [
-      {
-        "degree": "Engenharia de Software",
-        "institution": "Universidade Federal de Mato Grosso do Sul (UFMS)",
-        "location": "Campo Grande, MS, Brazil",
-        "startDate": "ago de 2023",
-        "endDate": "Previsão: dezembro de 2026"
-      }
-    ]
-  },
+  "education": [
+    {
+      "degree": "Engenharia de Software",
+      "institution": "Universidade Federal de Mato Grosso do Sul (UFMS)",
+      "location": "Campo Grande, MS, Brasil",
+      "startDate": "Ago 2023",
+      "endDate": "Previsto Dez 2026"
+    }
+  ],
   "ui": {
     "skills": {
-      "tagline": "Destaques da minha caixa de ferramentas — stack principal e ferramentas de suporte",
-      "categorySubtitlePrimary": "Ferramentas principais que uso",
-      "categorySubtitleSupporting": "Ferramentas de suporte que gosto",
+      "tagline": "Destaques da minha caixa de ferramentas — stack principal e tecnologias de apoio",
+      "categorySubtitlePrimary": "Ferramentas principais que utilizo",
+      "categorySubtitleSupporting": "Ferramentas de apoio que gosto",
       "badgePrimaryTooltip": "Principal",
       "badgeSecondaryTooltip": "Também uso",
       "emptyState": "Nenhuma habilidade encontrada."
@@ -147,13 +145,24 @@
       "visitButton": "Visitar"
     },
     "common": {
-      "prev": "Anterior",
-      "next": "Próximo"
+      "prev": "Ant",
+      "next": "Próx"
     },
     "education": {
       "entryLabel": "entrada",
       "entriesLabel": "entradas",
-      "emptyState": "Nenhuma entrada de αρκετικα εγγραφή found."
+      "emptyState": "Nenhum registro de formação encontrado."
+    },
+    "theme": {
+      "title": "Tema",
+      "auto": "Automático",
+      "light": "Claro",
+      "dark": "Escuro"
+    },
+    "menu": {
+      "sections": "Seções",
+      "actions": "Ações",
+      "downloadResume": "Baixar Currículo"
     }
   }
 }
