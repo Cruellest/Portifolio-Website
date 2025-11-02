@@ -1,5 +1,12 @@
 <template>
   <div class="resume-container">
+    <!-- Loading overlay -->
+    <Loading
+      :show="overlayVisible"
+      :status="overlayStatus"
+      :message="overlayMessage"
+      @action="handleOverlayAction"
+    />
     <div class="resume-content">
       <!-- Header com foto e info -->
       <header class="header">
@@ -112,7 +119,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watchEffect, nextTick } from 'vue'
+import { computed, onMounted, ref, watchEffect, nextTick, onBeforeUnmount } from 'vue'
 import {
   getPersonalData,
   getSectionsData,
@@ -122,6 +129,7 @@ import {
   getEducationData
 } from '../controllers/json-data-controller'
 import router from '../router'
+import Loading from '../components/loading.vue'
 
 const isDataLoaded = ref(false)
 const isImageLoaded = ref(false)
@@ -147,35 +155,66 @@ watchEffect(() => {
   }
 })
 
-/**
- * Automatically open the print dialog when the page loads
- * Redirects to home page when print dialog is closed
- */
+// state for overlay
+const overlayVisible = ref(true)
+const overlayStatus = ref('loading') // 'loading' | 'action'
+const overlayMessage = ref('Preparing resume for print…')
+
+// helper to return user (back or home)
+const handleOverlayAction = () => {
+  if (window.history.length > 1) router.back()
+  else router.push('/')
+}
+
+let fallbackTimer
+
+// trigger print and switch overlay to action mode (return button)
+const triggerPrint = () => {
+  try {
+    window.print()
+    overlayStatus.value = 'action'
+    overlayMessage.value = 'Print dialog opened. If not redirected, click to return.'
+  } catch {
+    // if print fails, still show action
+    overlayStatus.value = 'action'
+    overlayMessage.value = 'Could not open print dialog. Click to return.'
+  }
+}
+
 onMounted(async () => {
   await nextTick()
-  
+
+  // fallback if print dialog doesn’t appear
+  fallbackTimer = window.setTimeout(() => {
+    if (overlayStatus.value !== 'action') {
+      overlayStatus.value = 'action'
+      overlayMessage.value = 'Still preparing… You can return to menu.'
+    }
+  }, 6000)
+
   const profileImg = document.querySelector('img[alt*="Profile Picture"]')
   if (profileImg) {
     if (profileImg.complete) {
-      isImageLoaded.value = true
-      window.print()
+      triggerPrint()
     } else {
       profileImg.addEventListener('load', () => {
-        isImageLoaded.value = true
-        window.print()
-      })
-      
+        triggerPrint()
+      }, { once: true })
       profileImg.addEventListener('error', () => {
-        window.print()
-      })
+        triggerPrint()
+      }, { once: true })
     }
   } else {
-    window.print()
+    triggerPrint()
   }
 
   window.addEventListener('afterprint', () => {
     router.push('/')
   })
+})
+
+onBeforeUnmount(() => {
+  if (fallbackTimer) window.clearTimeout(fallbackTimer)
 })
 
 // helper para exibir URL sem protocolo/www/query/hash e sem barra final
