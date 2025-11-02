@@ -1,6 +1,6 @@
 <template>
   <section class="container mx-auto max-w-screen-lg my-8 sm:my-12 px-4">
-    <div class="card glass rounded-box p-6 sm:p-8 shadow">
+    <div class="card bg-base-100/80 backdrop-blur-sm border border-base-300 rounded-box p-6 sm:p-8 shadow">
       <div class="flex items-end justify-between gap-4 flex-wrap">
         <div>
           <h2 class="text-2xl sm:text-3xl md:text-4xl leading-tight sm:leading-snug text-primary font-bold break-words">

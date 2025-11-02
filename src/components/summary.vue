@@ -1,5 +1,5 @@
 <template>
-  <section class="container mx-auto max-w-screen-lg my-8 sm:my-12 px-4 glass rounded-box p-6 sm:p-8 text-base sm:text-lg">
+  <section class="container mx-auto max-w-screen-lg my-8 sm:my-12 px-4 bg-base-100/80 backdrop-blur-md rounded-box p-6 sm:p-8 text-base sm:text-lg">
     <!-- Header: Foto + Nome/Título -->
     <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
       <div class="relative">

@@ -1,7 +1,7 @@
 <template>
   <!-- NAVBAR ROOT -->
   <div 
-    class="navbar glass sticky top-0 left-0 z-50 isolate transition-all bg-base-100/60 border-b border-base-300 shadow-md supports-[backdrop-filter]:backdrop-blur-lg backdrop-blur-lg no-print"
+    class="navbar sticky top-0 left-0 z-50 isolate transition-all bg-base-100/60 border-b border-base-300 shadow-md supports-[backdrop-filter]:backdrop-blur-lg backdrop-blur-lg no-print"
     data-search-ignore
     :class="[sizeClasses.navbar]"
   >
@@ -133,8 +133,8 @@
           :key="key"
           :href="`#${key}`"
           :class="[
-            'btn btn-ghost glass rounded-full whitespace-nowrap',
-            'hover:bg-base-200 hover:text-base-content transition-colors duration-200',
+            'btn btn-ghost bg-base-100/60 backdrop-blur-sm rounded-full whitespace-nowrap',
+            'hover:bg-accent hover:text-accent-content transition-colors duration-200',
             sizeClasses.navBtn
           ]"
           @click.prevent="scrollToSection(key)"
@@ -143,6 +143,37 @@
         </a>
       </div>
       
+      <!-- THEME SWITCHER -->
+      <div class="dropdown dropdown-end">
+        <label
+          tabindex="0"
+          :class="['btn btn-ghost btn-circle rounded-full flex-shrink-0', sizeClasses.menuBtn]"
+          title="Tema"
+        >
+          <i :class="['bi', themeIcon]"></i>
+        </label>
+        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-44">
+          <li>
+            <button class="rounded-full" @click="setTheme('auto')">
+              <i class="bi bi-circle-half"></i>
+              Auto
+            </button>
+          </li>
+          <li>
+            <button class="rounded-full" @click="setTheme('light')">
+              <i class="bi bi-brightness-high"></i>
+              Claro
+            </button>
+          </li>
+          <li>
+            <button class="rounded-full" @click="setTheme('dark')">
+              <i class="bi bi-moon"></i>
+              Escuro
+            </button>
+          </li>
+        </ul>
+      </div>
+
       <!-- DOWNLOAD BUTTON -->
       <button 
         @click="downloadPDF"
@@ -484,6 +515,63 @@ const scrollToSection = (id) => {
   // fecha busca se aberta
   isSearchOpen.value = false
 }
+
+const THEME_KEY = 'theme-preference'
+const themeMode = ref('auto')
+const isDarkPreferred = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+const applyTheme = (mode) => {
+  const root = document.documentElement
+  if (mode === 'light') {
+    root.setAttribute('data-theme', 'light-custom')
+  } else if (mode === 'dark') {
+    root.setAttribute('data-theme', 'dark-custom')
+  } else {
+    root.removeAttribute('data-theme') // Auto: lets prefers-color-scheme decide (default/prefersdark)
+  }
+}
+
+const setTheme = (mode) => {
+  themeMode.value = mode
+  localStorage.setItem(THEME_KEY, mode)
+  applyTheme(mode)
+}
+
+const initTheme = () => {
+  const saved = localStorage.getItem(THEME_KEY)
+  setTheme(saved === 'light' || saved === 'dark' ? saved : 'auto')
+}
+
+const themeIcon = computed(() => {
+  if (themeMode.value === 'light') return 'bi-brightness-high'
+  if (themeMode.value === 'dark') return 'bi-moon'
+  return isDarkPreferred.value ? 'bi-moon' : 'bi-brightness-high'
+})
+
+let mediaQueryRef = null
+let mqlListenerRef = null
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown, { passive: false })
+  window.addEventListener('click', handleDocumentClick, true)
+  initTheme()
+  mediaQueryRef = window.matchMedia('(prefers-color-scheme: dark)')
+  const onSchemeChange = (e) => {
+    isDarkPreferred.value = e.matches
+    if (themeMode.value === 'auto') applyTheme('auto')
+  }
+  mediaQueryRef.addEventListener('change', onSchemeChange)
+  mqlListenerRef = onSchemeChange
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown)
+  window.removeEventListener('click', handleDocumentClick, true)
+  clearHighlights()
+  if (mediaQueryRef && mqlListenerRef) {
+    mediaQueryRef.removeEventListener('change', mqlListenerRef)
+  }
+})
 </script>
 
 <style>
