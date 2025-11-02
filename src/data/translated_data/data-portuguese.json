@@ -1,0 +1,159 @@
+{
+  "personal": {
+    "fullName": "Gabriel Paes Duarte Baltazar",
+    "title": "Software Engineer",
+    "profileImage": "https://avatars.githubusercontent.com/u/57719450?s=400&u=f96a46cd6fd5cdb0f882658d7376dcceda1b44c2&v=4",
+    "email": "gabriel81523642@gmail.com",
+    "phone": "+55 67 999841905",
+    "location": "Campo Grande, MS, Brazil",
+    "github": "https://github.com/Cruellest",
+    "linkedin": "https://www.linkedin.com/in/cruellest"
+  },
+  "section_titles": {
+    "summary": "Resumo Profissional",
+    "skills": "Habilidades Técnicas",
+    "experience": "Experiência Profissional",
+    "education": "Formação",
+    "projects": "Projetos"
+  },
+  "summary": "Software Engineer com experiência prática em Desenvolvimento Full Stack, Arquitetura de Software, DevOps e Testes. Atualmente, estou cursando Bacharelado em Engenharia de Software na Universidade Federal de Mato Grosso do Sul (UFMS) para aprofundar minha base teórica.",
+  "skills": [
+    {
+      "category": "Linguagens & Frameworks",
+      "skill_list": [
+        {"name": "Python", "level": "primary"},
+        {"name": "JavaScript", "level": "primary"},
+        {"name": "Java", "level": "primary"},
+        {"name": "Kotlin", "level": "primary"},
+        {"name": "Flutter", "level": "secondary"},
+        {"name": "Dart", "level": "secondary"},
+        {"name": "Objective C/C++", "level": "secondary"},
+        {"name": "React", "level": "secondary"},
+        {"name": "React Native", "level": "secondary"},
+        {"name": "Vue.js", "level": "primary"},
+        {"name": "FastApi", "level": "secondary"},
+        {"name": "Flask", "level": "secondary"}
+      ]
+    },
+    {
+      "category": "DevOps, Cloud & Virtualização",
+      "skill_list": [
+        {"name": "Docker", "level": "primary"},
+        {"name": "Kubernetes", "level": "primary"},
+        {"name": "Podman", "level": "secondary"},
+        {"name": "Ansible", "level": "primary"},
+        {"name": "Harbor", "level": "secondary"},
+        {"name": "Argo CD", "level": "primary"},
+        {"name": "KVM", "level": "primary"},
+        {"name": "QEMU", "level": "secondary"}
+      ]
+    },
+    {
+      "category": "Metodologias, Ferramentas & Conceitos",
+      "skill_list": [
+        {"name": "Scrum", "level": "secondary"},
+        {"name": "Kanban", "level": "secondary"},
+        {"name": "GIT", "level": "primary"},
+        {"name": "Lean Inception", "level": "primary"},
+        {"name": "Planning Poker", "level": "secondary"},
+        {"name": "DevOps", "level": "primary"},
+        {"name": "Arquitetura de Software", "level": "primary"},
+        {"name": "Engenharia de Requisitos", "level": "secondary"},
+        {"name": "Testes de Software", "level": "primary"},
+        {"name": "CI/CD", "level": "primary"},
+        {"name": "Microserviços", "level": "primary"},
+        {"name": "Metodologias Ágeis", "level": "primary"}
+      ]
+    },
+    {
+      "category": "Linguagens",
+      "skill_list": [
+        {"name": "Português (Nativo)", "level": "primary"},
+        {"name": "Inglês (Fluente)", "level": "primary"}
+      ]
+    }
+  ],
+  "experience": {
+    "jobs": [
+      {
+        "title": "Desenvolvedor Full Stack / Engenheiro de Software",
+        "company": "Ledes (Laboratório de Desenvolvimento de Software)",
+        "location": "Campo Grande, MS, Brazil",
+        "startDate": "junho de 2024",
+        "endDate": "Atual",
+        "highlights": [
+          "Desenvolvendo e mantendo aplicações web orientadas ao cliente utilizando Vue e Python, focando em arquitetura de sistemas escaláveis e código limpo. Implementando containerização e contribuindo para a orquestração para ambientes de staging e produção.",
+          "Participando ativamente de cerimônias Scrum para alinhar esforços de desenvolvimento, consistentemente cumprindo todos os prazos semanais para recursos orientados ao cliente."
+        ]
+      },
+      {
+        "title": "Desenvolvedor Full Stack / Gerente de Projeto",
+        "company": "Pet Sistemas (Programa de Educação Tutorial)",
+        "location": "Campo Grande, MS, Brazil",
+        "startDate": "agosto de 2023",
+        "endDate": "Atual",
+        "highlights": [
+          "Liderando gestão de projetos para iniciativas de software e desenvolvendo aplicações mobile cross-platform para a comunidade acadêmica utilizando React Native.",
+          "Implementando rotinas de testes unitários e de integração, juntamente com a criação de documentação técnica para garantir alta qualidade de aplicação, manutenibilidade e transferência de conhecimento."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "name": "Site Portfólio",
+        "description": "Site portfólio construído com Vue 3 + daisyUI mostrando projetos, currículo e experimentos de UI interativos.",
+        "link": "https://github.com/Cruellest"
+      },
+      {
+        "name": "Pipeline CI/CD",
+        "description": "Pipeline GitOps com Argo CD, Docker e Kubernetes para implantação e rollbacks automatizados.",
+        "link": "https://argo-cd.readthedocs.io/"
+      },
+      {
+        "name": "PET UFMS Mobile",
+        "description": "Aplicativo mobile para a comunidade acadêmica construído com React Native e um backend Python.",
+        "link": "https://pet.ufms.br/"
+      }
+    ]
+  },
+  "education": {
+    "degrees": [
+      {
+        "degree": "Engenharia de Software",
+        "institution": "Universidade Federal de Mato Grosso do Sul (UFMS)",
+        "location": "Campo Grande, MS, Brazil",
+        "startDate": "ago de 2023",
+        "endDate": "Previsão: dezembro de 2026"
+      }
+    ]
+  },
+  "ui": {
+    "skills": {
+      "tagline": "Destaques da minha caixa de ferramentas — stack principal e ferramentas de suporte",
+      "categorySubtitlePrimary": "Ferramentas principais que uso",
+      "categorySubtitleSupporting": "Ferramentas de suporte que gosto",
+      "badgePrimaryTooltip": "Principal",
+      "badgeSecondaryTooltip": "Também uso",
+      "emptyState": "Nenhuma habilidade encontrada."
+    },
+    "experience": {
+      "companiesLabel": "empresas",
+      "projectsLabel": "projetos",
+      "mobileSwipeHint": "Deslize para ver mais",
+      "dateLabel": "Período"
+    },
+    "projects": {
+      "emptyState": "Nenhum projeto encontrado.",
+      "visitButton": "Visitar"
+    },
+    "common": {
+      "prev": "Anterior",
+      "next": "Próximo"
+    },
+    "education": {
+      "entryLabel": "entrada",
+      "entriesLabel": "entradas",
+      "emptyState": "Nenhuma entrada de αρκετικα εγγραφή found."
+    }
+  }
+}

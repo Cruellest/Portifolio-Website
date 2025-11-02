@@ -94,6 +94,24 @@ function getUiStrings() {
   return data.ui ?? {};
 }
 
+// Language helpers (controller wrappers over the store)
+async function setLanguage(code: string) {
+  const store = useJsonData()
+  await store.setLanguage(code)
+}
+
+async function ensureLanguageFromLocalStorage() {
+  const store = useJsonData()
+  if (store.ensureLanguageFromLocalStorage) {
+    await store.ensureLanguageFromLocalStorage()
+  }
+}
+
+function getCurrentLanguageCode() {
+  const store = useJsonData()
+  return store.getCurrentLanguageCode
+}
+
 export {
   getPersonalData,
   getSectionsData,
@@ -101,5 +119,9 @@ export {
   getSkillsData,
   getExperienceData,
   getEducationData,
-  getUiStrings
+  getUiStrings,
+  // new exports
+  setLanguage,
+  ensureLanguageFromLocalStorage,
+  getCurrentLanguageCode
 };

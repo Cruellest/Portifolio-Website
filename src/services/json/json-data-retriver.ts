@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { watch } from 'vue'
 import jsonData from '../../data/data.json'
+import languagesData from '../../data/languages.json' // added
 
 /**
  * Pinia store for managing portfolio JSON data
@@ -18,7 +19,9 @@ export const useJsonData = defineStore('jsonData', {
    * @returns {Object} Initial state with imported JSON data
    */
   state: () => ({
-    data: jsonData
+    data: jsonData,
+    currentLanguageCode: 'en' as string,
+    languages: (languagesData as any)?.languages ?? []
   }),
   
   /**
@@ -29,7 +32,12 @@ export const useJsonData = defineStore('jsonData', {
      * Returns all portfolio data
      * @returns {typeof jsonData} The complete portfolio data object
      */
-    getData: (state) => state.data
+    getData: (state) => state.data,
+    /**
+     * Exposes the current language code
+     * @returns {string} The current language code
+     */
+    getCurrentLanguageCode: (state) => state.currentLanguageCode
   },
   
   /**
@@ -87,6 +95,44 @@ export const useJsonData = defineStore('jsonData', {
       const stored = localStorage.getItem('portfolioData')
       if (stored) {
         this.data = JSON.parse(stored)
+      }
+    },
+
+    // added: helpers and language loaders
+    _labelToSlug(label: string) {
+      return (label ?? '').toLowerCase().replace(/\s+/g, '-')
+    },
+    async loadLanguageData(code: string) {
+      try {
+        if (code === 'en') {
+          const mod: any = await import('../../data/data.json')
+          this.data = mod.default ?? mod
+          this.currentLanguageCode = 'en'
+          return
+        }
+        const lang = (this.languages as any[]).find((l) => l.code === code)
+        if (!lang || !lang.label) throw new Error('Unknown language')
+        const slug = this._labelToSlug(lang.label)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore dynamic json import
+        const mod: any = await import(`../../data/translated_data/data-${slug}.json`)
+        this.data = mod.default ?? mod
+        this.currentLanguageCode = code
+      } catch {
+        const mod: any = await import('../../data/data.json')
+        this.data = mod.default ?? mod
+        this.currentLanguageCode = 'en'
+      }
+    },
+    async setLanguage(code: string) {
+      await this.loadLanguageData(code)
+      try { localStorage.setItem('site-language', code) } catch {}
+    },
+    async ensureLanguageFromLocalStorage() {
+      let code = 'en'
+      try { code = localStorage.getItem('site-language') || 'en' } catch {}
+      if (code !== this.currentLanguageCode) {
+        await this.loadLanguageData(code)
       }
     }
   }

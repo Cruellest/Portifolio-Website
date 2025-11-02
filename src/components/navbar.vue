@@ -7,21 +7,32 @@
   >
     <!-- NAVBAR START (left) -->
     <div :class="['navbar-start gap-1 sm:gap-2', sizeClasses.gap]">
-      <!-- FULL NAME BUTTON (hidden on small screens) -->
-      <button 
-        :class="['btn btn-secondary rounded-full font-bold text-white', sizeClasses.namebreakpoint, sizeClasses.nameBtn]"
-        @click="scrollToSection('summary')"
-      >
-        {{ personalData.fullName }}
-      </button>
-
-      <!-- SHORT NAME BUTTON (visible on small screens) -->
-      <button 
-        :class="['btn btn-secondary rounded-full font-bold text-white', sizeClasses.breakpoint, sizeClasses.nameBtn]"
-        @click="scrollToSection('summary')"
-      >
-        {{ getShortName(personalData.fullName) }}
-      </button>
+      <!-- LANGUAGE DROPDOWN (selection enabled) -->
+      <div class="dropdown dropdown-start">
+        <label
+          tabindex="0"
+          :class="['btn btn-secondary rounded-full font-bold text-white', sizeClasses.nameBtn]"
+          ref="langDropdownBtn"
+        >
+          <i class="bi bi-translate mr-2"></i>
+          {{ currentLanguageNativeName }}
+        </label>
+        <ul
+          tabindex="0"
+          class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-44"
+          ref="langDropdownMenu"
+        >
+          <li v-for="lang in languages" :key="lang.code">
+            <button
+              class="rounded-full flex items-center justify-between"
+              @click="selectLanguage(lang.code)"
+            >
+              <span>{{ lang.nativeName }}</span>
+              <i v-if="lang.code === selectedLanguageCode" class="bi bi-check text-success"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
 
       <!-- SEARCH AREA -->
       <div class="flex items-center min-w-0">
@@ -177,7 +188,7 @@
       <!-- DOWNLOAD BUTTON -->
       <button 
         @click="downloadPDF"
-        :class="['btn btn-accent btn-circle rounded-full flex-shrink-0', sizeClasses.downloadBtn]"
+        :class="['btn btn-ghost btn-circle rounded-full flex-shrink-0', sizeClasses.downloadBtn]"
         title="Download resume as PDF"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -211,7 +222,8 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { getPersonalData, getSectionsData } from '../controllers/json-data-controller'
+import { getPersonalData, getSectionsData, setLanguage as setAppLanguage, ensureLanguageFromLocalStorage as ensureLangFromStorage, getCurrentLanguageCode } from '../controllers/json-data-controller'
+import languagesData from '../data/languages.json'
 
 const router = useRouter()
 
@@ -465,6 +477,9 @@ const handleDocumentClick = (e) => {
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown, { passive: false })
   window.addEventListener('click', handleDocumentClick, true)
+  void ensureLangFromStorage().then(() => {
+    selectedLanguageCode.value = getCurrentLanguageCode() || selectedLanguageCode.value
+  })
 })
 
 onBeforeUnmount(() => {
@@ -516,6 +531,43 @@ const scrollToSection = (id) => {
   isSearchOpen.value = false
 }
 
+// Language state (controller-only, no direct service)
+const LANGUAGE_KEY = 'site-language'
+const languages = computed(() => languagesData?.languages || [])
+const selectedLanguageCode = ref(
+  localStorage.getItem(LANGUAGE_KEY) || (languages.value[0]?.code ?? 'en')
+)
+const currentLanguage = computed(
+  () => languages.value.find(l => l.code === selectedLanguageCode.value) || languages.value[0] || null
+)
+const currentLanguageNativeName = computed(() => currentLanguage.value?.nativeName || 'Language')
+
+// new refs to control dropdown closing
+const langDropdownBtn = ref(null)
+const langDropdownMenu = ref(null)
+const closeLanguageDropdown = () => {
+  langDropdownMenu.value?.blur?.()
+  langDropdownBtn.value?.blur?.()
+  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+    document.activeElement.blur()
+  }
+}
+
+// Selection handler -> loads translated JSON via controller + persists language
+const selectLanguage = async (code) => {
+  selectedLanguageCode.value = code
+  await setAppLanguage(code)
+  closeLanguageDropdown()
+}
+
+// Initialize current language on mount and align store with localStorage
+onMounted(() => {
+  void ensureLangFromStorage().then(() => {
+    selectedLanguageCode.value = getCurrentLanguageCode() || selectedLanguageCode.value
+  })
+})
+
+// Theme state
 const THEME_KEY = 'theme-preference'
 const themeMode = ref('auto')
 const isDarkPreferred = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
