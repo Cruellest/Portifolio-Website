@@ -1,13 +1,13 @@
 <template>
   <div class="resume-container">
-    <!-- Loading overlay -->
+    <!-- Loading overlay (no theme applied here) -->
     <Loading
       :show="overlayVisible"
       :status="overlayStatus"
       :message="overlayMessage"
       @action="handleOverlayAction"
     />
-    <div class="resume-content">
+    <div class="resume-content" data-theme="light-custom">
       <!-- Header com foto e info -->
       <header class="header">
         <div class="header-content">

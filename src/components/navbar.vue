@@ -159,7 +159,7 @@
         <label
           tabindex="0"
           :class="['btn btn-ghost btn-circle rounded-full flex-shrink-0', sizeClasses.menuBtn]"
-          title="Tema"
+          :title="themeTexts.title"
         >
           <i :class="['bi', themeIcon]"></i>
         </label>
@@ -167,19 +167,19 @@
           <li>
             <button class="rounded-full" @click="setTheme('auto')">
               <i class="bi bi-circle-half"></i>
-              Auto
+              {{ themeTexts.auto }}
             </button>
           </li>
           <li>
             <button class="rounded-full" @click="setTheme('light')">
               <i class="bi bi-brightness-high"></i>
-              Claro
+              {{ themeTexts.light }}
             </button>
           </li>
           <li>
             <button class="rounded-full" @click="setTheme('dark')">
               <i class="bi bi-moon"></i>
-              Escuro
+              {{ themeTexts.dark }}
             </button>
           </li>
         </ul>
@@ -224,6 +224,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { getPersonalData, getSectionsData, setLanguage as setAppLanguage, ensureLanguageFromLocalStorage as ensureLangFromStorage, getCurrentLanguageCode } from '../controllers/json-data-controller'
 import languagesData from '../data/languages.json'
+import appData from '../data/data.json'
 
 const router = useRouter()
 
@@ -515,23 +516,20 @@ const mainButtonFunction = () => {
   router.push({ name: 'Home' })
 }
 
-// Smooth scroll para uma section pelo id
+// Smooth scroll for section navigation
 const scrollToSection = (id) => {
   if (!id) return
   const el = document.getElementById(id)
   if (el && typeof el.scrollIntoView === 'function') {
     el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
-    // atualiza o hash sem recarregar
+
     if (history?.replaceState) history.replaceState(null, '', `#${id}`)
   } else {
-    // fallback via router hash
     router.push({ hash: `#${id}` }).catch(() => {})
   }
-  // fecha busca se aberta
   isSearchOpen.value = false
 }
 
-// Language state (controller-only, no direct service)
 const LANGUAGE_KEY = 'site-language'
 const languages = computed(() => languagesData?.languages || [])
 const selectedLanguageCode = ref(
@@ -542,7 +540,6 @@ const currentLanguage = computed(
 )
 const currentLanguageNativeName = computed(() => currentLanguage.value?.nativeName || 'Language')
 
-// new refs to control dropdown closing
 const langDropdownBtn = ref(null)
 const langDropdownMenu = ref(null)
 const closeLanguageDropdown = () => {
@@ -553,21 +550,18 @@ const closeLanguageDropdown = () => {
   }
 }
 
-// Selection handler -> loads translated JSON via controller + persists language
 const selectLanguage = async (code) => {
   selectedLanguageCode.value = code
   await setAppLanguage(code)
   closeLanguageDropdown()
 }
 
-// Initialize current language on mount and align store with localStorage
 onMounted(() => {
   void ensureLangFromStorage().then(() => {
     selectedLanguageCode.value = getCurrentLanguageCode() || selectedLanguageCode.value
   })
 })
 
-// Theme state
 const THEME_KEY = 'theme-preference'
 const themeMode = ref('auto')
 const isDarkPreferred = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -579,7 +573,7 @@ const applyTheme = (mode) => {
   } else if (mode === 'dark') {
     root.setAttribute('data-theme', 'dark-custom')
   } else {
-    root.removeAttribute('data-theme') // Auto: lets prefers-color-scheme decide (default/prefersdark)
+    root.removeAttribute('data-theme')
   }
 }
 
@@ -623,6 +617,13 @@ onBeforeUnmount(() => {
   if (mediaQueryRef && mqlListenerRef) {
     mediaQueryRef.removeEventListener('change', mqlListenerRef)
   }
+})
+
+const themeTexts = computed(() => appData?.ui?.theme ?? {
+  title: 'Tema',
+  auto: 'Auto',
+  light: 'Claro',
+  dark: 'Escuro'
 })
 </script>
 

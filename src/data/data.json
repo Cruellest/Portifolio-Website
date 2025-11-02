@@ -101,18 +101,18 @@
     "projects": [
       {
         "name": "Portfolio Website",
-        "description": "Personal portfolio built with Vue 3 + daisyUI showing projects, resume and interactive UI experiments.",
-        "link": "https://github.com/Cruellest"
+        "description": "Personal portfolio built with Vue 3 + daisyUI showing projects, resume and interactive UI experiments, totally customizable by a single JSON file.",
+        "link": "https://github.com/Cruellest/Portifolio-Website"
       },
       {
-        "name": "K8s CI/CD Pipeline",
-        "description": "GitOps-driven pipeline with Argo CD, Docker and Kubernetes for automated deployment and rollbacks.",
-        "link": "https://argo-cd.readthedocs.io/"
+        "name": "Quati Saude",
+        "description": "AI-powered platform built in partnership with FUNDECT and PGE/MS to assist and automate legal processes and document workflows, including CD pipelines with Argo CD, solution design, software architecture, requirements engineering, and microservices implementation.",
+        "link": "https://www.pge.ms.gov.br/laboratorio-de-inovacao-apresenta-nova-solucao-tecnologica-para-fortalecer-a-defesa-do-estado-em-acoes-judiciais-da-saude/"
       },
       {
-        "name": "PET UFMS Mobile",
-        "description": "Cross-platform app for the academic community built with React Native and a Python backend.",
-        "link": "https://pet.ufms.br/"
+        "name": "Food Battle: This or That?",
+        "description": "Swipe-based A/B voting game where you pick between two dishes and share preferences. Built with React and a Firebase, with a responsive web build hosted on Firebase.",
+        "link": "https://food-battle-this-or-that.web.app/"
       }
     ]
   },
@@ -152,6 +152,12 @@
       "entryLabel": "entry",
       "entriesLabel": "entries",
       "emptyState": "No education records found."
+    },
+    "theme": {
+      "title": "Theme",
+      "auto": "Auto",
+      "light": "Light",
+      "dark": "Dark"
     }
   }
 }
