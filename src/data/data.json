@@ -147,6 +147,11 @@
     "common": {
       "prev": "Prev",
       "next": "Next"
+    },
+    "education": {
+      "entryLabel": "entry",
+      "entriesLabel": "entries",
+      "emptyState": "No education records found."
     }
   }
 }
