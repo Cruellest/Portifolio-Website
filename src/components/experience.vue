@@ -88,7 +88,12 @@
                   <div class="card-body h-full flex flex-col justify-between gap-3">
                     <div class="space-y-1">
                       <div class="text-xs text-base-content/60">
-                        {{ job.startDate }} – {{ job.endDate }}
+                        <template v-if="dateLabel">
+                          <span class="font-medium">{{ dateLabel }}:</span> {{ job.startDate }} – {{ job.endDate }}
+                        </template>
+                        <template v-else>
+                          {{ job.startDate }} – {{ job.endDate }}
+                        </template>
                       </div>
                       <h3 class="card-title text-lg">
                         {{ job.title }}
@@ -110,6 +115,10 @@
                 </div>
               </div>
             </div>
+            <!-- hint de swipe (mobile) -->
+            <p v-if="mobileSwipeHint" class="mt-2 text-center text-xs text-base-content/60">
+              {{ mobileSwipeHint }}
+            </p>
           </div>
         </div>
       </div>
@@ -148,7 +157,7 @@
                         class="btn btn-sm btn-outline text-primary border-primary hover:bg-primary hover:text-primary-content"
                         :title="p.link"
                       >
-                        Visit
+                        {{ projectsVisit }}
                       </a>
                     </div>
                   </div>
@@ -173,7 +182,7 @@
                     class="btn btn-sm btn-outline text-primary border-primary hover:bg-primary hover:text-primary-content"
                     :title="p.link"
                   >
-                    Visit
+                    {{ projectsVisit }}
                   </a>
                 </div>
               </div>
@@ -182,7 +191,7 @@
         </div>
 
         <div v-else class="mt-6 alert alert-info">
-          <span>No projects found.</span>
+          <span>{{ projectsEmpty }}</span>
         </div>
       </div>
     </div>
@@ -210,6 +219,10 @@ const projects = computed<Project[]>(() => Array.isArray(exp.value?.projects) ? 
 const ui = computed(() => getUiStrings() as any)
 const companiesLabel = computed<string>(() => ui.value?.experience?.companiesLabel || 'companies')
 const projectsLabel = computed<string>(() => ui.value?.experience?.projectsLabel || 'projects')
+const dateLabel = computed<string>(() => ui.value?.experience?.dateLabel || '')
+const mobileSwipeHint = computed<string>(() => ui.value?.experience?.mobileSwipeHint || '')
+const projectsEmpty = computed<string>(() => ui.value?.projects?.emptyState || 'No projects found.')
+const projectsVisit = computed<string>(() => ui.value?.projects?.visitButton || 'Visit')
 
 
 // scroller e controles (jobs) - desktop

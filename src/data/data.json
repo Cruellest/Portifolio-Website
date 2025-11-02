@@ -136,7 +136,17 @@
     },
     "experience": {
       "companiesLabel": "companies",
-      "projectsLabel": "projects"
+      "projectsLabel": "projects",
+      "mobileSwipeHint": "Swipe to see more",
+      "dateLabel": "Period"
+    },
+    "projects": {
+      "emptyState": "No projects found.",
+      "visitButton": "Visit"
+    },
+    "common": {
+      "prev": "Prev",
+      "next": "Next"
     }
   }
 }
