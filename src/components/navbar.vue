@@ -127,7 +127,7 @@
       <!-- DESKTOP NAV SECTIONS -->
       <div :class="['hidden gap-1 sm:gap-2', sizeClasses.navbreakpoint, sizeClasses.gap]">
         <a 
-          v-for="(section, key) in navigationSections" 
+          v-for="(section, key) in navSectionsPrimary" 
           :key="key"
           :href="`#${key}`"
           :class="[
@@ -159,13 +159,8 @@
           </svg>
         </label>
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48">
-          <li v-for="(section, key) in navigationSections" :key="key">
-            <a 
-              :href="`#${key}`" 
-              class="rounded-full glass hover:bg-base-200 hover:text-base-content transition-colors duration-200"
-            >
-              {{ section }}
-            </a>
+          <li v-for="(section, key) in navSectionsPrimary" :key="key">
+            <a :href="`#${key}`" class="rounded-full glass hover:bg-base-200 hover:text-base-content transition-colors duration-200">{{ section }}</a>
           </li>
         </ul>
       </div>
@@ -198,6 +193,17 @@ const totalMatches = ref(0)
 
 const personalData = computed(() => getPersonalData())
 const navigationSections = computed(() => getSectionsData())
+
+// Build navbar from primary sections only (ignore subtitles by not considering them)
+const navSectionsPrimary = computed(() => {
+  const src = navigationSections.value || {}
+  const order = ['summary', 'skills', 'experience', 'education']
+  const out = {}
+  order.forEach(k => {
+    if (src[k]) out[k] = src[k]
+  })
+  return out
+})
 
 const getShortName = (fullName) => {
   const parts = fullName.trim().split(' ')

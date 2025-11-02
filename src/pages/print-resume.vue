@@ -85,7 +85,7 @@
           <!-- Experiência -->
           <section class="section">
             <h2>{{ sectionTitles.experience }}</h2>
-            <div class="job" v-for="(job, index) in experienceData" :key="index">
+            <div class="job" v-for="(job, index) in jobs" :key="index">
               <div class="job-header">
                 <h3>{{ job.title }}</h3>
                 <span class="date-badge">{{ job.startDate }} – {{ job.endDate }}</span>
@@ -112,6 +112,24 @@
               <p class="location">{{ edu.location }}</p>
             </div>
           </section>
+
+          <!-- Projetos -->
+          <!-- REMOVED: Projects section on resume -->
+          <!--
+          <section class="section" v-if="experienceData?.projects?.length">
+            <h2>{{ sectionTitles.projects || 'Projects' }}</h2>
+            <div class="project" v-for="(p, i) in experienceData.projects" :key="i">
+              <div class="project-header">
+                <h3>{{ p.name }}</h3>
+              </div>
+              <p class="project-desc">{{ p.description }}</p>
+              <p class="project-link">
+                <i class="bi bi-link-45deg contact-icon" aria-hidden="true"></i>
+                <a :href="p.link" target="_blank" rel="noopener" :title="p.link">{{ p.link }}</a>
+              </p>
+            </div>
+          </section>
+          -->
         </div>
       </div>
     </div>
@@ -140,6 +158,12 @@ const summaryData = computed(() => getSummaryData())
 const skillsData = computed(() => getSkillsData())
 const experienceData = computed(() => getExperienceData())
 const educationData = computed(() => getEducationData())
+// Consome apenas jobs do controller (compatível com formato antigo em array)
+const jobs = computed(() => {
+  const exp = experienceData.value
+  if (Array.isArray(exp)) return exp
+  return Array.isArray(exp?.jobs) ? exp.jobs : []
+})
 
 watchEffect(() => {
   const hasAllData = 

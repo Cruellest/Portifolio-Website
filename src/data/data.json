@@ -13,7 +13,8 @@
     "summary": "Professional Summary",
     "skills": "Technical Skills",
     "experience": "Work Experience",
-    "education": "Education"
+    "education": "Education",
+    "projects": "Projects"
   },
   "summary": "Software Engineer with hands-on experience in Full Stack Development, Software Architecture, DevOps, and Testing. Currently pursuing a Bachelor of Science in Software Engineering at the Universidade Federal do Mato Grosso do Sul (UFMS) to deepen my theoretical foundation.",
   "skills": [
@@ -72,30 +73,49 @@
       ]
     }
   ],
-  "experience": [
-    {
-      "title": "Full Stack Developer / Software Engineer",
-      "company": "Ledes (Laboratório de Desenvolvimento de Software)",
-      "location": "Campo Grande, MS, Brazil",
-      "startDate": "June 2024",
-      "endDate": "Current",
-      "highlights": [
-        "Developing and maintaining client-driven web applications using Vue and Python, focusing on scalable system architecture and clean code. Implementing containerization and contributing to orchestration for staging and production environments.",
-        "Actively participating in Scrum ceremonies to align development efforts, consistently meeting all weekly deadlines for client-driven features."
-      ]
-    },
-    {
-      "title": "Full Stack Developer / Project Manager",
-      "company": "Pet Sistemas (Programa de Educação Tutorial)",
-      "location": "Campo Grande, MS, Brazil",
-      "startDate": "August 2023",
-      "endDate": "Current",
-      "highlights": [
-        "Leading project management for software initiatives and developing cross-platform mobile applications for the academic community using React Native.",
-        "Implementing unit and integration testing routines alongside authoring technical documentation to ensure high application quality, maintainability, and knowledge transfer."
-      ]
-    }
-  ],
+  "experience": {
+    "jobs": [
+      {
+        "title": "Full Stack Developer / Software Engineer",
+        "company": "Ledes (Laboratório de Desenvolvimento de Software)",
+        "location": "Campo Grande, MS, Brazil",
+        "startDate": "June 2024",
+        "endDate": "Current",
+        "highlights": [
+          "Developing and maintaining client-driven web applications using Vue and Python, focusing on scalable system architecture and clean code. Implementing containerization and contributing to orchestration for staging and production environments.",
+          "Actively participating in Scrum ceremonies to align development efforts, consistently meeting all weekly deadlines for client-driven features."
+        ]
+      },
+      {
+        "title": "Full Stack Developer / Project Manager",
+        "company": "Pet Sistemas (Programa de Educação Tutorial)",
+        "location": "Campo Grande, MS, Brazil",
+        "startDate": "August 2023",
+        "endDate": "Current",
+        "highlights": [
+          "Leading project management for software initiatives and developing cross-platform mobile applications for the academic community using React Native.",
+          "Implementing unit and integration testing routines alongside authoring technical documentation to ensure high application quality, maintainability, and knowledge transfer."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "name": "Portfolio Website",
+        "description": "Personal portfolio built with Vue 3 + daisyUI showing projects, resume and interactive UI experiments.",
+        "link": "https://github.com/Cruellest"
+      },
+      {
+        "name": "K8s CI/CD Pipeline",
+        "description": "GitOps-driven pipeline with Argo CD, Docker and Kubernetes for automated deployment and rollbacks.",
+        "link": "https://argo-cd.readthedocs.io/"
+      },
+      {
+        "name": "PET UFMS Mobile",
+        "description": "Cross-platform app for the academic community built with React Native and a Python backend.",
+        "link": "https://pet.ufms.br/"
+      }
+    ]
+  },
   "education": [
     {
       "degree": "Software Engineering",
@@ -113,6 +133,10 @@
       "badgePrimaryTooltip": "Core",
       "badgeSecondaryTooltip": "Also use",
       "emptyState": "No skills found."
+    },
+    "experience": {
+      "companiesLabel": "companies",
+      "projectsLabel": "projects"
     }
   }
 }
