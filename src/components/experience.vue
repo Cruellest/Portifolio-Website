@@ -123,7 +123,6 @@
         <!-- Mobile: carrossel com swipe -->
         <div v-if="projects.length" class="relative md:hidden">
           <div
-            ref="projectsCarousel"
             class="overflow-x-auto scroll-smooth snap-x snap-mandatory touch-pan-x"
             tabindex="0"
           >
