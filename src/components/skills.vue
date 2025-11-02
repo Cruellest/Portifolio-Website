@@ -10,7 +10,7 @@
             {{ tagline }}
           </p>
         </div>
-        <!-- ...removed numeric stats block for a cleaner, non-quantified presentation... -->
+
       </div>
 
       <div class="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
@@ -61,7 +61,7 @@
         </div>
       </div>
 
-      <!-- optional empty state -->
+      <!-- empty state -->
       <div v-if="!categories.length" class="mt-6 alert alert-info">
         <span>No skills found.</span>
       </div>
@@ -83,7 +83,6 @@ const sectionTitle = computed<string>(() => (sectionTitles.value?.skills) || 'Sk
 // friendly, non-quantified subtitle
 const tagline = computed(() => 'Highlights from my toolbox — core stack and supporting technologies')
 
-// category cards without numbers/percentages
 const categories = computed(() => {
   const list = (rawSkills.value || [])
   return list.map(cat => {
@@ -108,7 +107,6 @@ const categories = computed(() => {
   })
 })
 
-// helper to make initials from category name
 function getInitials(text: string) {
   const parts = text.trim().split(/\s+/).slice(0, 2)
   return parts.map(p => p.charAt(0)).join('').toUpperCase()

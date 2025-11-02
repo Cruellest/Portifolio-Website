@@ -23,11 +23,15 @@
         {"name": "Python", "level": "primary"},
         {"name": "JavaScript", "level": "primary"},
         {"name": "Java", "level": "primary"},
-        {"name": "Flutter", "level": "primary"},
-        {"name": "Objective C/C++", "level": "primary"},
+        {"name": "Kotlin", "level": "primary"},
+        {"name": "Flutter", "level": "secondary"},
+        {"name": "Dart", "level": "secondary"},
+        {"name": "Objective C/C++", "level": "secondary"},
+        {"name": "HTML5", "level": "primary"},
+        {"name": "CSS3", "level": "primary"},
         {"name": "React", "level": "secondary"},
         {"name": "React Native", "level": "secondary"},
-        {"name": "Vue.js", "level": "secondary"},
+        {"name": "Vue.js", "level": "primary"},
         {"name": "FastApi", "level": "secondary"},
         {"name": "Flask", "level": "secondary"}
       ]
@@ -37,29 +41,29 @@
       "skill_list": [
         {"name": "Docker", "level": "primary"},
         {"name": "Kubernetes", "level": "primary"},
-        {"name": "Podman", "level": "primary"},
+        {"name": "Podman", "level": "secondary"},
         {"name": "Ansible", "level": "primary"},
-        {"name": "Harbor", "level": "primary"},
+        {"name": "Harbor", "level": "secondary"},
         {"name": "Argo CD", "level": "primary"},
-        {"name": "KVM", "level": "secondary"},
+        {"name": "KVM", "level": "primary"},
         {"name": "QEMU", "level": "secondary"}
       ]
     },
     {
       "category": "Methodologies, Tools & Concepts",
       "skill_list": [
-        {"name": "Scrum", "level": "primary"},
-        {"name": "Kanban", "level": "primary"},
+        {"name": "Scrum", "level": "secondary"},
+        {"name": "Kanban", "level": "secondary"},
         {"name": "GIT", "level": "primary"},
         {"name": "Lean Inception", "level": "primary"},
-        {"name": "Planning Poker", "level": "primary"},
-        {"name": "DevOps", "level": "secondary"},
-        {"name": "Software Architecture", "level": "secondary"},
+        {"name": "Planning Poker", "level": "secondary"},
+        {"name": "DevOps", "level": "primary"},
+        {"name": "Software Architecture", "level": "primary"},
         {"name": "Requirements Engineering", "level": "secondary"},
-        {"name": "Software Testing", "level": "secondary"},
-        {"name": "CI/CD", "level": "secondary"},
-        {"name": "Microservices", "level": "secondary"},
-        {"name": "Agile Methodologies", "level": "secondary"}
+        {"name": "Software Testing", "level": "primary"},
+        {"name": "CI/CD", "level": "primary"},
+        {"name": "Microservices", "level": "primary"},
+        {"name": "Agile Methodologies", "level": "primary"}
       ]
     },
     {
