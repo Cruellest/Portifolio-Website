@@ -1,7 +1,7 @@
 <template>
   <!-- NAVBAR ROOT -->
   <div 
-    class="navbar bg-transparent transition-all no-print relative z-50 isolate backdrop-blur-0"
+    class="navbar glass sticky top-0 left-0 z-50 isolate transition-all bg-base-100/60 border-b border-base-300 shadow-md supports-[backdrop-filter]:backdrop-blur-lg backdrop-blur-lg no-print"
     data-search-ignore
     :class="[sizeClasses.navbar]"
   >
@@ -10,6 +10,7 @@
       <!-- FULL NAME BUTTON (hidden on small screens) -->
       <button 
         :class="['btn btn-secondary rounded-full font-bold text-white', sizeClasses.namebreakpoint, sizeClasses.nameBtn]"
+        @click="scrollToSection('summary')"
       >
         {{ personalData.fullName }}
       </button>
@@ -17,6 +18,7 @@
       <!-- SHORT NAME BUTTON (visible on small screens) -->
       <button 
         :class="['btn btn-secondary rounded-full font-bold text-white', sizeClasses.breakpoint, sizeClasses.nameBtn]"
+        @click="scrollToSection('summary')"
       >
         {{ getShortName(personalData.fullName) }}
       </button>
@@ -135,6 +137,7 @@
             'hover:bg-base-200 hover:text-base-content transition-colors duration-200',
             sizeClasses.navBtn
           ]"
+          @click.prevent="scrollToSection(key)"
         >
           {{ getResponsiveName(section) }}
         </a>
@@ -160,7 +163,13 @@
         </label>
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48">
           <li v-for="(section, key) in navSectionsPrimary" :key="key">
-            <a :href="`#${key}`" class="rounded-full glass hover:bg-base-200 hover:text-base-content transition-colors duration-200">{{ section }}</a>
+            <a
+              :href="`#${key}`"
+              class="rounded-full hover:bg-base-200 hover:text-base-content transition-colors duration-200"
+              @click.prevent="scrollToSection(key)"
+            >
+              {{ section }}
+            </a>
           </li>
         </ul>
       </div>
@@ -458,6 +467,22 @@ const downloadPDF = () => {
 
 const mainButtonFunction = () => {
   router.push({ name: 'Home' })
+}
+
+// Smooth scroll para uma section pelo id
+const scrollToSection = (id) => {
+  if (!id) return
+  const el = document.getElementById(id)
+  if (el && typeof el.scrollIntoView === 'function') {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+    // atualiza o hash sem recarregar
+    if (history?.replaceState) history.replaceState(null, '', `#${id}`)
+  } else {
+    // fallback via router hash
+    router.push({ hash: `#${id}` }).catch(() => {})
+  }
+  // fecha busca se aberta
+  isSearchOpen.value = false
 }
 </script>
 
