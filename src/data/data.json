@@ -27,8 +27,6 @@
         {"name": "Flutter", "level": "secondary"},
         {"name": "Dart", "level": "secondary"},
         {"name": "Objective C/C++", "level": "secondary"},
-        {"name": "HTML5", "level": "primary"},
-        {"name": "CSS3", "level": "primary"},
         {"name": "React", "level": "secondary"},
         {"name": "React Native", "level": "secondary"},
         {"name": "Vue.js", "level": "primary"},
@@ -106,5 +104,15 @@
       "startDate": "Aug 2023",
       "endDate": "Expected December 2026"
     }
-  ]
+  ],
+  "ui": {
+    "skills": {
+      "tagline": "Highlights from my toolbox — core stack and supporting technologies",
+      "categorySubtitlePrimary": "Core tools I rely on",
+      "categorySubtitleSupporting": "Supporting tools I enjoy",
+      "badgePrimaryTooltip": "Core",
+      "badgeSecondaryTooltip": "Also use",
+      "emptyState": "No skills found."
+    }
+  }
 }

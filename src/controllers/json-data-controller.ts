@@ -84,11 +84,22 @@ function getEducationData() {
   return jsonDataStore.getData.education;
 }
 
+/**
+ * Retrieves UI copy/strings from data.json
+ * Supports both "ui" and legacy "ui_strings" keys
+ */
+function getUiStrings() {
+  const jsonDataStore = useJsonData();
+  const data = jsonDataStore.getData;
+  return data.ui ?? {};
+}
+
 export {
   getPersonalData,
   getSectionsData,
   getSummaryData,
   getSkillsData,
   getExperienceData,
-  getEducationData
+  getEducationData,
+  getUiStrings
 };

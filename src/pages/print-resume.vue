@@ -503,17 +503,49 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
     page-break-after: always;
   }
 
-  .header,
-  .section,
-  .job,
-  .education,
-  .skill-item {
-    page-break-inside: avoid !important;
+  /* Two-column flow */
+  .content-grid {
+    display: block !important;
+    column-count: 2;
+    column-gap: 8mm;
   }
 
-  .content-grid {
-    page-break-inside: avoid;
+  /* Flatten column wrappers */
+  .left-column,
+  .right-column {
+    display: contents !important;
   }
+
+  /* Keep header unbroken */
+  .header {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    -webkit-column-break-inside: avoid !important;
+  }
+
+  /* Allow sections and items to split across columns/pages */
+  .section,
+  .skill-item,
+  .job,
+  .education,
+  .skills-grid,
+  .job ul,
+  .job li,
+  .education ul,
+  .education li {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    -webkit-column-break-inside: auto !important;
+  }
+
+  /* Optional: reduce orphans/widows for nicer splits */
+  p, li {
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Remove previous avoid rules that could block splitting */
+  /* (Make sure any prior 'page-break-inside: avoid' on these is removed) */
 }
 
 @page {

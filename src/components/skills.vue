@@ -44,7 +44,7 @@
                 v-for="(skill, i) in cat.itemsSorted"
                 :key="i"
                 :class="['tooltip', skill.level === 'primary' ? 'tooltip-primary' : '']"
-                :data-tip="skill.level === 'primary' ? 'Core' : 'Also use'"
+                :data-tip="skill.level === 'primary' ? primaryTooltip : secondaryTooltip"
               >
                 <span
                   class="badge"
@@ -63,7 +63,7 @@
 
       <!-- empty state -->
       <div v-if="!categories.length" class="mt-6 alert alert-info">
-        <span>No skills found.</span>
+        <span>{{ emptyStateText }}</span>
       </div>
     </div>
   </section>
@@ -71,17 +71,36 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { getSkillsData, getSectionsData } from '../controllers/json-data-controller'
+import { getSkillsData, getSectionsData, getUiStrings } from '../controllers/json-data-controller'
 
 type SkillItem = { name: string; level?: string }
 type SkillCategory = { category: string; skill_list: SkillItem[] }
 
 const rawSkills = computed(() => getSkillsData() as unknown as SkillCategory[] || [])
 const sectionTitles = computed(() => getSectionsData() as any)
+const ui = computed(() => getUiStrings() as any)
+
 const sectionTitle = computed<string>(() => (sectionTitles.value?.skills) || 'Skills')
 
-// friendly, non-quantified subtitle
-const tagline = computed(() => 'Highlights from my toolbox — core stack and supporting technologies')
+// texts from data.json with fallbacks
+const tagline = computed<string>(() =>
+  ui.value?.skills?.tagline || 'Skills not found'
+)
+const primarySubtitle = computed<string>(() =>
+  ui.value?.skills?.categorySubtitlePrimary || 'Skills not found'
+)
+const supportingSubtitle = computed<string>(() =>
+  ui.value?.skills?.categorySubtitleSupporting || 'Skills not found'
+)
+const primaryTooltip = computed<string>(() =>
+  ui.value?.skills?.badgePrimaryTooltip || 'Skills not found'
+)
+const secondaryTooltip = computed<string>(() =>
+  ui.value?.skills?.badgeSecondaryTooltip || 'Skills not found'
+)
+const emptyStateText = computed<string>(() =>
+  ui.value?.skills?.emptyState || 'Skills not found'
+)
 
 const categories = computed(() => {
   const list = (rawSkills.value || [])
@@ -96,13 +115,12 @@ const categories = computed(() => {
     return {
       name: cat.category || 'Untitled',
       initials: getInitials(cat.category || 'U'),
-      subtitle: hasPrimary ? 'Core tools I rely on' : 'Supporting tools I enjoy',
+      subtitle: hasPrimary ? primarySubtitle.value : supportingSubtitle.value,
       itemsSorted
     }
   }).sort((a, b) => {
-    // Put categories with core tools first, then alphabetically
-    const aCore = a.subtitle.includes('Core') ? 0 : 1
-    const bCore = b.subtitle.includes('Core') ? 0 : 1
+    const aCore = a.subtitle === primarySubtitle.value ? 0 : 1
+    const bCore = b.subtitle === primarySubtitle.value ? 0 : 1
     return aCore - bCore || a.name.localeCompare(b.name)
   })
 })
