@@ -348,7 +348,7 @@ const sizeClasses = computed(() => {
   return sizes[props.size] || sizes.md
 })
 
-// Search/highlight related helpers (unchanged)
+// Search/highlight related helpers
 const getHighlights = () => Array.from(document.querySelectorAll('mark[data-search-highlight="true"]'))
 
 const setActiveMark = (mark, active) => {
@@ -460,7 +460,7 @@ watch(searchQuery, (q) => {
   highlightQuery(q)
 })
 
-// Keyboard handler and document click handler (unchanged)
+// Keyboard handler and document click handler
 const handleKeydown = (e) => {
   const isMac = navigator.platform.toUpperCase().includes('MAC')
   const combo = (isMac && e.metaKey) || (!isMac && e.ctrlKey)
