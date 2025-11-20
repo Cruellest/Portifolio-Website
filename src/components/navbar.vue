@@ -253,6 +253,7 @@ const props = defineProps({
   }
 })
 
+// core reactive state used in template
 const isSearchOpen = ref(false)
 const searchQuery = ref('')
 const searchInput = ref(null)
@@ -264,7 +265,7 @@ const totalMatches = ref(0)
 const personalData = computed(() => getPersonalData())
 const navigationSections = computed(() => getSectionsData())
 
-// Build navbar from primary sections only (ignore subtitles by not considering them)
+// Build navbar from primary sections only (ignore subtitles)
 const navSectionsPrimary = computed(() => {
   const src = navigationSections.value || {}
   const order = ['summary', 'skills', 'experience', 'education']
@@ -347,6 +348,7 @@ const sizeClasses = computed(() => {
   return sizes[props.size] || sizes.md
 })
 
+// Search/highlight related helpers (unchanged)
 const getHighlights = () => Array.from(document.querySelectorAll('mark[data-search-highlight="true"]'))
 
 const setActiveMark = (mark, active) => {
@@ -458,6 +460,7 @@ watch(searchQuery, (q) => {
   highlightQuery(q)
 })
 
+// Keyboard handler and document click handler (unchanged)
 const handleKeydown = (e) => {
   const isMac = navigator.platform.toUpperCase().includes('MAC')
   const combo = (isMac && e.metaKey) || (!isMac && e.ctrlKey)
@@ -475,9 +478,7 @@ const handleKeydown = (e) => {
   }
 }
 
-const closeSearchOnSubmit = () => {
-  isSearchOpen.value = false
-}
+const closeSearchOnSubmit = () => { isSearchOpen.value = false }
 
 const isDesktop = () => window.matchMedia('(min-width: 640px)').matches
 
@@ -492,69 +493,26 @@ const handleDocumentClick = (e) => {
   isSearchOpen.value = false
 }
 
-onMounted(() => {
+// ---------- Consolidated lifecycle helpers ----------
+const addGlobalEventListeners = () => {
   window.addEventListener('keydown', handleKeydown, { passive: false })
   window.addEventListener('click', handleDocumentClick, true)
-  void ensureLangFromStorage().then(() => {
-    selectedLanguageCode.value = getCurrentLanguageCode() || selectedLanguageCode.value
-  })
-})
-
-onBeforeUnmount(() => {
+}
+const removeGlobalEventListeners = () => {
   window.removeEventListener('keydown', handleKeydown)
   window.removeEventListener('click', handleDocumentClick, true)
-  clearHighlights()
-})
-
-const toggleSearch = () => {
-  isSearchOpen.value = !isSearchOpen.value
-  if (isSearchOpen.value) {
-    nextTick(() => searchInput.value?.focus())
-  } else {
-    clearHighlights()
-    totalMatches.value = 0
-    currentIndex.value = -1
-  }
 }
 
-const nextMatch = () => {
-  if (totalMatches.value > 0) focusHighlight(currentIndex.value + 1)
+const initLanguageState = async () => {
+  await ensureLangFromStorage()
+  selectedLanguageCode.value = getCurrentLanguageCode() || selectedLanguageCode.value
 }
 
-const prevMatch = () => {
-  if (totalMatches.value > 0) focusHighlight(currentIndex.value - 1)
-}
-
-const downloadPDF = () => {
-  router.push({ name: 'PrintResume' })
-}
-
-const mainButtonFunction = () => {
-  router.push({ name: 'Home' })
-}
-
-// Smooth scroll for section navigation
-const scrollToSection = (id) => {
-  if (!id) return
-  const el = document.getElementById(id)
-  if (el && typeof el.scrollIntoView === 'function') {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
-
-    if (history?.replaceState) history.replaceState(null, '', `#${id}`)
-  } else {
-    router.push({ hash: `#${id}` }).catch(() => {})
-  }
-  isSearchOpen.value = false
-}
-
+// ---------- Language dropdown helpers ----------
 const LANGUAGE_KEY = 'site-language'
 const languages = computed(() => languagesData?.languages || [])
-const selectedLanguageCode = ref(
-  localStorage.getItem(LANGUAGE_KEY) || (languages.value[0]?.code ?? 'en')
-)
-const currentLanguage = computed(
-  () => languages.value.find(l => l.code === selectedLanguageCode.value) || languages.value[0] || null
-)
+const selectedLanguageCode = ref(localStorage.getItem(LANGUAGE_KEY) || (languages.value[0]?.code ?? 'en'))
+const currentLanguage = computed(() => languages.value.find(l => l.code === selectedLanguageCode.value) || languages.value[0] || null)
 const currentLanguageNativeName = computed(() => currentLanguage.value?.nativeName || 'Language')
 
 const langDropdownBtn = ref(null)
@@ -573,30 +531,21 @@ const selectLanguage = async (code) => {
   closeLanguageDropdown()
 }
 
-onMounted(() => {
-  void ensureLangFromStorage().then(() => {
-    selectedLanguageCode.value = getCurrentLanguageCode() || selectedLanguageCode.value
-  })
-})
-
+// ---------- Theme helpers (consolidated) ----------
 const THEME_KEY = 'theme-preference'
 const themeMode = ref('auto')
 const isDarkPreferred = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
 
 const applyTheme = (mode) => {
   const root = document.documentElement
-  if (mode === 'light') {
-    root.setAttribute('data-theme', 'light-custom')
-  } else if (mode === 'dark') {
-    root.setAttribute('data-theme', 'dark-custom')
-  } else {
-    root.removeAttribute('data-theme')
-  }
+  if (mode === 'light') root.setAttribute('data-theme', 'light-custom')
+  else if (mode === 'dark') root.setAttribute('data-theme', 'dark-custom')
+  else root.removeAttribute('data-theme')
 }
 
 const setTheme = (mode) => {
   themeMode.value = mode
-  localStorage.setItem(THEME_KEY, mode)
+  try { localStorage.setItem(THEME_KEY, mode) } catch {}
   applyTheme(mode)
 }
 
@@ -611,31 +560,46 @@ const themeIcon = computed(() => {
   return isDarkPreferred.value ? 'bi-moon' : 'bi-brightness-high'
 })
 
-let mediaQueryRef = null
+// Use plain JS refs (no TypeScript annotations) to avoid SFC parser errors
+let mediaQueryRef = ref(null)
 let mqlListenerRef = null
 
+const onSchemeChange = (e) => {
+  const matches = 'matches' in e ? e.matches : Boolean(e && e.matches)
+  isDarkPreferred.value = matches
+  if (themeMode.value === 'auto') applyTheme('auto')
+}
+
+// Single consolidated lifecycle registration
 onMounted(() => {
-  window.addEventListener('keydown', handleKeydown, { passive: false })
-  window.addEventListener('click', handleDocumentClick, true)
+  addGlobalEventListeners()
   initTheme()
-  mediaQueryRef = window.matchMedia('(prefers-color-scheme: dark)')
-  const onSchemeChange = (e) => {
-    isDarkPreferred.value = e.matches
-    if (themeMode.value === 'auto') applyTheme('auto')
+  void initLanguageState()
+
+  // setup prefers-color-scheme watcher
+  mediaQueryRef.value = window.matchMedia('(prefers-color-scheme: dark)')
+  mqlListenerRef = (ev) => onSchemeChange(ev)
+  if (mediaQueryRef.value && mediaQueryRef.value.addEventListener) {
+    mediaQueryRef.value.addEventListener('change', mqlListenerRef)
+  } else if (mediaQueryRef.value && mediaQueryRef.value.addListener) {
+    // older browsers
+    mediaQueryRef.value.addListener(mqlListenerRef)
   }
-  mediaQueryRef.addEventListener('change', onSchemeChange)
-  mqlListenerRef = onSchemeChange
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', handleKeydown)
-  window.removeEventListener('click', handleDocumentClick, true)
+  removeGlobalEventListeners()
   clearHighlights()
-  if (mediaQueryRef && mqlListenerRef) {
-    mediaQueryRef.removeEventListener('change', mqlListenerRef)
+  if (mediaQueryRef.value) {
+    if (mediaQueryRef.value.removeEventListener && mqlListenerRef) {
+      mediaQueryRef.value.removeEventListener('change', mqlListenerRef)
+    } else if (mediaQueryRef.value.removeListener && mqlListenerRef) {
+      mediaQueryRef.value.removeListener(mqlListenerRef)
+    }
   }
 })
 
+// ---------- Remaining computed texts (unchanged) ----------
 const themeTexts = computed(() => appData?.ui?.theme ?? {
   title: 'Tema',
   auto: 'Auto',
