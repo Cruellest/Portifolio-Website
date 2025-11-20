@@ -237,6 +237,19 @@
 </template>
 
 <script setup>
+/**
+ * Navbar component
+ * Provides:
+ *  - search/highlight across the page
+ *  - language selection (uses json-data-controller)
+ *  - theme switching (persisted to localStorage)
+ *
+ * Props:
+ *  - size: 'sm'|'md'|'lg'|'xl' (default: 'md')
+ *
+ * VSCode: JSDoc above and inline @type annotations below help editor tooling.
+ */
+
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { getPersonalData, getSectionsData, setLanguage as setAppLanguage, ensureLanguageFromLocalStorage as ensureLangFromStorage, getCurrentLanguageCode } from '../controllers/json-data-controller'
@@ -545,7 +558,12 @@ const applyTheme = (mode) => {
 
 const setTheme = (mode) => {
   themeMode.value = mode
-  try { localStorage.setItem(THEME_KEY, mode) } catch {}
+  try {
+    localStorage.setItem(THEME_KEY, mode)
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('Failed to save theme preference:', err)
+  }
   applyTheme(mode)
 }
 
@@ -560,8 +578,10 @@ const themeIcon = computed(() => {
   return isDarkPreferred.value ? 'bi-moon' : 'bi-brightness-high'
 })
 
-// Use plain JS refs (no TypeScript annotations) to avoid SFC parser errors
-let mediaQueryRef = ref(null)
+// Use plain JS variables for MediaQueryList (not Vue refs) so lifecycle code is straightforward.
+// Provide JSDoc so VSCode infers the type: /** @type {MediaQueryList|null} */
+let mediaQueryRef = null
+/** @type {((e: MediaQueryListEvent) => void)|null} */
 let mqlListenerRef = null
 
 const onSchemeChange = (e) => {
@@ -577,24 +597,24 @@ onMounted(() => {
   void initLanguageState()
 
   // setup prefers-color-scheme watcher
-  mediaQueryRef.value = window.matchMedia('(prefers-color-scheme: dark)')
+  mediaQueryRef = window.matchMedia('(prefers-color-scheme: dark)')
   mqlListenerRef = (ev) => onSchemeChange(ev)
-  if (mediaQueryRef.value && mediaQueryRef.value.addEventListener) {
-    mediaQueryRef.value.addEventListener('change', mqlListenerRef)
-  } else if (mediaQueryRef.value && mediaQueryRef.value.addListener) {
+  if (mediaQueryRef && mediaQueryRef.addEventListener) {
+    mediaQueryRef.addEventListener('change', mqlListenerRef)
+  } else if (mediaQueryRef && mediaQueryRef.addListener) {
     // older browsers
-    mediaQueryRef.value.addListener(mqlListenerRef)
+    mediaQueryRef.addListener(mqlListenerRef)
   }
 })
 
 onBeforeUnmount(() => {
   removeGlobalEventListeners()
   clearHighlights()
-  if (mediaQueryRef.value) {
-    if (mediaQueryRef.value.removeEventListener && mqlListenerRef) {
-      mediaQueryRef.value.removeEventListener('change', mqlListenerRef)
-    } else if (mediaQueryRef.value.removeListener && mqlListenerRef) {
-      mediaQueryRef.value.removeListener(mqlListenerRef)
+  if (mediaQueryRef) {
+    if (mediaQueryRef.removeEventListener && mqlListenerRef) {
+      mediaQueryRef.removeEventListener('change', mqlListenerRef)
+    } else if (mediaQueryRef.removeListener && mqlListenerRef) {
+      mediaQueryRef.removeListener(mqlListenerRef)
     }
   }
 })

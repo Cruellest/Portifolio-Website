@@ -87,8 +87,10 @@ export const useJsonData = defineStore('jsonData', {
         // single fallback path on any error
         try {
           this.data = await this._importJsonModule('../../data/data.json')
-        } catch {
-          // if even fallback fails, keep current data
+        } catch (fallbackErr) {
+          // if even fallback fails, keep current data and log for debugging
+          // eslint-disable-next-line no-console
+          console.error('Failed to load fallback data:', fallbackErr)
         }
         this.currentLanguageCode = 'en'
       }
@@ -96,12 +98,22 @@ export const useJsonData = defineStore('jsonData', {
 
     async setLanguage(code: string) {
       await this.loadLanguageData(code)
-      try { localStorage.setItem('site-language', code) } catch {}
+      try {
+        localStorage.setItem('site-language', code)
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('Failed to save language preference:', err)
+      }
     },
 
     async ensureLanguageFromLocalStorage() {
       let code = 'en'
-      try { code = localStorage.getItem('site-language') || 'en' } catch {}
+      try {
+        code = localStorage.getItem('site-language') || 'en'
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('Failed to read site-language from localStorage:', err)
+      }
       if (code !== this.currentLanguageCode) {
         await this.loadLanguageData(code)
       }
