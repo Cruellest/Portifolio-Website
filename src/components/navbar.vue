@@ -299,6 +299,44 @@ const getResponsiveName = (sectionName) => {
   return sectionName
 }
 
+// Added missing event handlers
+const scrollToSection = (key) => {
+  const element = document.getElementById(key)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
+  }
+}
+
+const downloadPDF = () => {
+  router.push('/print-resume')
+}
+
+const toggleSearch = () => {
+  isSearchOpen.value = !isSearchOpen.value
+  if (isSearchOpen.value) {
+    nextTick(() => searchInput.value?.focus())
+  }
+}
+
+const handleSearchBlur = () => {
+  // Optional: logic when search input loses focus
+}
+
+const prevMatch = () => {
+  if (totalMatches.value > 0) {
+    focusHighlight(currentIndex.value - 1)
+  }
+}
+
+const nextMatch = () => {
+  if (totalMatches.value > 0) {
+    focusHighlight(currentIndex.value + 1)
+  }
+}
+
 const sizeClasses = computed(() => {
   const sizes = {
     sm: {
@@ -401,6 +439,44 @@ const clearHighlights = () => {
   })
 }
 
+// Helper constants and functions for search highlighting
+const EXCLUDE_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'IFRAME', 'CANVAS', 'SVG', 'INPUT', 'TEXTAREA', 'SELECT', 'MARK'])
+
+const shouldSkipNode = (el) => {
+  if (!el || el.nodeType !== 1) return false
+  if (el.hasAttribute('data-search-ignore')) return true
+  if (EXCLUDE_TAGS.has(el.tagName)) return true
+  return false
+}
+
+const processTextNode = (text, re) => {
+  if (!text) return null
+  re.lastIndex = 0
+  if (!re.test(text)) return null
+  re.lastIndex = 0
+  
+  const frag = document.createDocumentFragment()
+  let lastIndex = 0
+  let match
+  
+  while ((match = re.exec(text)) !== null) {
+    const start = match.index
+    const end = start + match[0].length
+    if (start > lastIndex) frag.appendChild(document.createTextNode(text.slice(lastIndex, start)))
+    
+    const mark = document.createElement('mark')
+    mark.setAttribute('data-search-highlight', 'true')
+    mark.className = 'bg-accent text-accent-content rounded'
+    mark.textContent = text.slice(start, end)
+    frag.appendChild(mark)
+    
+    lastIndex = end
+  }
+  
+  if (lastIndex < text.length) frag.appendChild(document.createTextNode(text.slice(lastIndex)))
+  return frag
+}
+
 const highlightQuery = (query) => {
   clearHighlights()
   const q = (query || '').trim()
@@ -411,48 +487,22 @@ const highlightQuery = (query) => {
   }
 
   const re = new RegExp(escapeRegExp(q), 'gi')
-  const EXCLUDE_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'IFRAME', 'CANVAS', 'SVG', 'INPUT', 'TEXTAREA', 'SELECT', 'MARK'])
-
-  const shouldSkip = (el) => {
-    if (!el || el.nodeType !== 1) return false
-    if (el.hasAttribute('data-search-ignore')) return true
-    if (EXCLUDE_TAGS.has(el.tagName)) return true
-    return false
-  }
 
   const walk = (node) => {
     if (!node) return
     if (node.nodeType === 1) {
-      const el = node
-      if (shouldSkip(el)) return
-      if (el.tagName === 'MARK') return
-      for (let i = 0; i < el.childNodes.length; i++) {
-        const child = el.childNodes[i]
-        if (child.nodeType === 1 && shouldSkip(child)) continue
-        if (child.nodeType === 3) {
-          const text = child.nodeValue
-          if (!text) continue
-          if (!re.test(text)) { re.lastIndex = 0; continue }
-          re.lastIndex = 0
-          const frag = document.createDocumentFragment()
-          let lastIndex = 0
-          let match
-          while ((match = re.exec(text)) !== null) {
-            const start = match.index
-            const end = start + match[0].length
-            if (start > lastIndex) frag.appendChild(document.createTextNode(text.slice(lastIndex, start)))
-            const mark = document.createElement('mark')
-            mark.setAttribute('data-search-highlight', 'true')
-            mark.className = 'bg-accent text-accent-content rounded'
-            mark.textContent = text.slice(start, end)
-            frag.appendChild(mark)
-            lastIndex = end
-          }
-          if (lastIndex < text.length) frag.appendChild(document.createTextNode(text.slice(lastIndex)))
-          el.replaceChild(frag, child)
-          i--
-        } else {
+      if (shouldSkipNode(node)) return
+      
+      for (let i = 0; i < node.childNodes.length; i++) {
+        const child = node.childNodes[i]
+        if (child.nodeType === 1) {
           walk(child)
+        } else if (child.nodeType === 3) {
+          const frag = processTextNode(child.nodeValue, re)
+          if (frag) {
+            node.replaceChild(frag, child)
+            i--
+          }
         }
       }
     }
