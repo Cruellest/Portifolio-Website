@@ -53,29 +53,25 @@ export const useJsonData = defineStore('jsonData', {
       return langs.find((l) => l.code === code) || null
     },
 
-    // helper: import json module and return its default/object
-    async _importJsonModule(path: string) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore dynamic json import
-      const mod: any = await import(path)
-      return mod?.default ?? mod
-    },
-
     // Extract Method: Load English data
     async _loadEnglishData() {
-      this.data = await this._importJsonModule('../../data/data.json')
+      // Use static import to avoid Vite warning about mixed static/dynamic imports
+      this.data = jsonData
       this.currentLanguageCode = 'en'
     },
 
     // Extract Method: Load translated data
     async _loadTranslatedData(code: string, lang: any) {
       const slug = this._labelToSlug(lang.label)
-      this.data = await this._importJsonModule(`../../data/translated_data/data-${slug}.json`)
+      const mod: any = await import(`../../data/translated_data/data-${slug}.json`)
+      this.data = mod?.default ?? mod
       this.currentLanguageCode = code
     },
 
     // Extract Method: Handle load error with fallback
     async _handleLoadError(err: any) {
+      // eslint-disable-next-line no-console
+      console.warn('Error loading language data:', err)
       try {
         await this._loadEnglishData()
       } catch (fallbackErr) {
