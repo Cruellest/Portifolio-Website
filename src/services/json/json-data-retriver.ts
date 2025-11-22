@@ -61,38 +61,50 @@ export const useJsonData = defineStore('jsonData', {
       return mod?.default ?? mod
     },
 
+    // Extract Method: Load English data
+    async _loadEnglishData() {
+      this.data = await this._importJsonModule('../../data/data.json')
+      this.currentLanguageCode = 'en'
+    },
+
+    // Extract Method: Load translated data
+    async _loadTranslatedData(code: string, lang: any) {
+      const slug = this._labelToSlug(lang.label)
+      this.data = await this._importJsonModule(`../../data/translated_data/data-${slug}.json`)
+      this.currentLanguageCode = code
+    },
+
+    // Extract Method: Handle load error with fallback
+    async _handleLoadError(err: any) {
+      try {
+        await this._loadEnglishData()
+      } catch (fallbackErr) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to load fallback data:', fallbackErr)
+      }
+      this.currentLanguageCode = 'en'
+    },
+
     // simpler, linear load function with early returns
     async loadLanguageData(code: string) {
       try {
         // prefer built-in english file for 'en'
         if (code === 'en') {
-          this.data = await this._importJsonModule('../../data/data.json')
-          this.currentLanguageCode = 'en'
+          await this._loadEnglishData()
           return
         }
 
         const lang = this._findLanguageByCode(code)
         if (!lang || !lang.label) {
           // invalid code -> fallback to english
-          this.data = await this._importJsonModule('../../data/data.json')
-          this.currentLanguageCode = 'en'
+          await this._loadEnglishData()
           return
         }
 
-        const slug = this._labelToSlug(lang.label)
         // import translated file by slug
-        this.data = await this._importJsonModule(`../../data/translated_data/data-${slug}.json`)
-        this.currentLanguageCode = code
+        await this._loadTranslatedData(code, lang)
       } catch (err) {
-        // single fallback path on any error
-        try {
-          this.data = await this._importJsonModule('../../data/data.json')
-        } catch (fallbackErr) {
-          // if even fallback fails, keep current data and log for debugging
-          // eslint-disable-next-line no-console
-          console.error('Failed to load fallback data:', fallbackErr)
-        }
-        this.currentLanguageCode = 'en'
+        await this._handleLoadError(err)
       }
     },
 
