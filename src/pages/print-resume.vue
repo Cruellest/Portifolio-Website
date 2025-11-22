@@ -149,6 +149,8 @@ import {
 import router from '../router'
 import Loading from '../components/loading.vue'
 
+const PRINT_FALLBACK_DELAY_MS = 6000 
+
 const isDataLoaded = ref(false)
 const isImageLoaded = ref(false)
 
@@ -214,7 +216,7 @@ onMounted(async () => {
       overlayStatus.value = 'action'
       overlayMessage.value = 'Still preparing… You can return to menu.'
     }
-  }, 6000)
+  }, PRINT_FALLBACK_DELAY_MS)
 
   const profileImg = document.querySelector('img[alt*="Profile Picture"]')
   if (profileImg) {

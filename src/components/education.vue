@@ -58,6 +58,8 @@ type Education = {
   endDate: string
 }
 
+const END_YEAR_CURRENT_FLAG = 9999
+
 const sectionTitles = computed(() => getSectionsData() as any)
 const ui = computed(() => getUiStrings() as any)
 const eduEntry = computed<string>(() => ui.value?.education?.entryLabel || 'entry')
@@ -68,12 +70,12 @@ const items = computed<Education[]>(() => {
   return Array.isArray(raw) ? (raw as Education[]) : (Array.isArray(raw?.education) ? raw.education as Education[] : [])
 })
 
-// Ordenação baseada no ano final (endDate). "Current/Atual/Present" vai para o final (9999).
+// Ordenação baseada no ano final (endDate). "Current/Atual/Present" vai para o final.
 const getEndYear = (s: string): number => {
   if (!s) return -Infinity
   const lower = s.toLowerCase()
   if (lower.includes('current') || lower.includes('atual') || lower.includes('present'))
-    return 9999
+    return END_YEAR_CURRENT_FLAG
   const m = s.match(/(19|20)\d{2}/)
   return m ? Number(m[0]) : -Infinity
 }
