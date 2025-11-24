@@ -144,6 +144,6 @@ const contacts = computed<ContactButton[]>(() => {
 })
 </script>
 
-<style>
+<style scoped>
 @import "bootstrap-icons/font/bootstrap-icons.css";
 </style>
