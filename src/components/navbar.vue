@@ -684,7 +684,7 @@ const menuTexts = computed(() => appData?.ui?.menu ?? {
 })
 </script>
 
-<style>
+<style scoped>
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 
 mark[data-search-highlight="true"] {
