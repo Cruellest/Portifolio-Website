@@ -282,11 +282,11 @@ const navigationSections = computed(() => getSectionsData())
 const navSectionsPrimary = computed(() => {
   const src = navigationSections.value || {}
   const order = ['summary', 'skills', 'experience', 'education']
-  const out = {}
-  order.forEach(k => {
-    if (src[k]) out[k] = src[k]
-  })
-  return out
+  return Object.fromEntries(
+    order
+      .filter(key => src[key])
+      .map(key => [key, src[key]])
+  )
 })
 
 const getShortName = (fullName) => {
@@ -396,7 +396,7 @@ const sizeClasses = computed(() => {
       menubreakpoint: 'xl:hidden'
     }
   }
-  return sizes[props.size] || sizes.md
+  return sizes[props.size] ?? sizes.md
 })
 
 // Search/highlight related helpers
