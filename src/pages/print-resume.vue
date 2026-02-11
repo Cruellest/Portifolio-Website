@@ -1,6 +1,6 @@
 <template>
   <div class="resume-container">
-    <!-- Loading overlay – hidden from print via v-if (removed from DOM before print) -->
+    <!-- Loading overlay -->
     <div
       v-if="overlayVisible"
       class="fixed inset-0 z-50 grid place-items-center bg-base-100/60 backdrop-blur-sm"
@@ -9,6 +9,20 @@
         <div class="flex flex-col items-center gap-3">
           <span class="loading loading-spinner loading-lg text-primary"></span>
           <p class="text-base-content/80">{{ overlayMessage }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- Back button overlay – shown on mobile after print dialog -->
+    <div
+      v-if="showBackButton"
+      class="fixed inset-0 z-50 grid place-items-center bg-base-100/60 backdrop-blur-sm"
+    >
+      <div class="bg-base-100/80 backdrop-blur-md rounded-box p-6 sm:p-8 shadow-xl text-center w-[min(90vw,28rem)]">
+        <div class="flex flex-col items-center gap-3">
+          <p class="text-base-content/80">{{ printUi.printDone || 'Done!' }}</p>
+          <button class="btn btn-primary w-full" @click="goBack">
+            {{ ui?.common?.returnToMenu || 'Return to menu' }}
+          </button>
         </div>
       </div>
     </div>
@@ -145,6 +159,7 @@ const jobs = computed(() => {
 })
 
 const overlayVisible = ref(true)
+const showBackButton = ref(false)
 const ui = computed(() => getUiStrings())
 const printUi = computed(() => ui.value?.print ?? {})
 const overlayMessage = ref('')
@@ -195,11 +210,13 @@ const triggerPrint = async () => {
     const elapsed = Date.now() - before
 
     if (elapsed > 300) {
-      // Desktop: print dialog already closed, safe to navigate back
+      // Desktop: window.print() blocked (sync), dialog already closed
       goBack()
+    } else {
+      // Android/mobile: window.print() returned immediately (async)
+      // Show a "back to site" button for when the user finishes printing
+      showBackButton.value = true
     }
-    // Android: do NOT navigate. The user is still in the print dialog.
-    // They will use the browser back button after finishing.
   } catch {
     goBack()
   }

@@ -175,6 +175,7 @@
     },
     "print": {
       "preparing": "Preparing resume for print…",
+      "printDone": "Done!",
       "printOpened": "Print dialog opened. If not redirected, click to return.",
       "printFailed": "Could not open print dialog. Click to return.",
       "stillPreparing": "Still preparing… You can return to menu.",
