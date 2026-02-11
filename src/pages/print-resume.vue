@@ -149,8 +149,6 @@ const ui = computed(() => getUiStrings())
 const printUi = computed(() => ui.value?.print ?? {})
 const overlayMessage = ref('')
 
-let afterPrintHandler
-
 // A4 content area in px
 const A4_CONTENT_WIDTH_PX = 180 * 3.7795
 const A4_CONTENT_HEIGHT_PX = 267 * 3.7795
@@ -185,23 +183,24 @@ const triggerPrint = async () => {
   fitToPage()
   await nextTick()
 
-  // 3. Wait for a repaint so the browser sees the final layout
+  // 3. Wait for browser to paint the final layout
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
 
-  // 4. Register afterprint to go back AFTER user closes print dialog
-  if (afterPrintHandler) {
-    window.removeEventListener('afterprint', afterPrintHandler)
-  }
-  afterPrintHandler = () => {
-    goBack()
-  }
-  window.addEventListener('afterprint', afterPrintHandler, { once: true })
-
-  // 5. Open print dialog
+  // 4. Call print and measure elapsed time
+  //    Desktop: window.print() is synchronous – blocks until dialog closes (seconds)
+  //    Android: window.print() is async – returns immediately (<50ms)
   try {
+    const before = Date.now()
     window.print()
+    const elapsed = Date.now() - before
+
+    if (elapsed > 300) {
+      // Desktop: print dialog already closed, safe to navigate back
+      goBack()
+    }
+    // Android: do NOT navigate. The user is still in the print dialog.
+    // They will use the browser back button after finishing.
   } catch {
-    // If print fails, go back
     goBack()
   }
 }
@@ -220,10 +219,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  if (afterPrintHandler) {
-    window.removeEventListener('afterprint', afterPrintHandler)
-    afterPrintHandler = null
-  }
+  // cleanup if needed
 })
 
 const urlDisplay = (url) => {
