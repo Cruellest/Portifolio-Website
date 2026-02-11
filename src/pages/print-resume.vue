@@ -1,4 +1,20 @@
 <template>
+  <!-- Back button overlay – OUTSIDE resume-container so it uses full viewport -->
+  <Teleport to="body">
+    <div
+      v-if="showBackButton"
+      class="back-overlay"
+    >
+      <div class="bg-base-100/80 backdrop-blur-md rounded-box p-6 sm:p-8 shadow-xl text-center w-[min(90vw,28rem)]">
+        <div class="flex flex-col items-center gap-3">
+          <p class="text-base-content/80">{{ printUi.printDone || 'Done!' }}</p>
+          <button class="btn btn-primary w-full" @click="goBack">
+            {{ ui?.common?.returnToMenu || 'Return to menu' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
   <div class="resume-container">
     <!-- Loading overlay -->
     <div
@@ -9,20 +25,6 @@
         <div class="flex flex-col items-center gap-3">
           <span class="loading loading-spinner loading-lg text-primary"></span>
           <p class="text-base-content/80">{{ overlayMessage }}</p>
-        </div>
-      </div>
-    </div>
-    <!-- Back button overlay – shown on mobile after print dialog -->
-    <div
-      v-if="showBackButton"
-      class="fixed inset-0 z-50 grid place-items-center bg-base-100/60 backdrop-blur-sm"
-    >
-      <div class="bg-base-100/80 backdrop-blur-md rounded-box p-6 sm:p-8 shadow-xl text-center w-[min(90vw,28rem)]">
-        <div class="flex flex-col items-center gap-3">
-          <p class="text-base-content/80">{{ printUi.printDone || 'Done!' }}</p>
-          <button class="btn btn-primary w-full" @click="goBack">
-            {{ ui?.common?.returnToMenu || 'Return to menu' }}
-          </button>
         </div>
       </div>
     </div>
@@ -261,6 +263,26 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 
 <style scoped>
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+</style>
+
+<!-- Non-scoped: Teleported back-overlay lives outside component DOM -->
+<style>
+.back-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: oklch(0.95 0 0 / 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@media print {
+  .back-overlay {
+    display: none !important;
+  }
+}
 </style>
 
 <style scoped>
