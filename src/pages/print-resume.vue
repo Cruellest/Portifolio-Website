@@ -192,8 +192,7 @@ const overlayMessage = ref(ui.value?.print?.preparing || 'Preparing resume for p
 
 // helper to return user (back or home)
 const handleOverlayAction = () => {
-  if (window.history.length > 1) router.back()
-  else router.push('/')
+  router.push('/')
 }
 
 let fallbackTimer
@@ -226,8 +225,7 @@ const fitToPage = () => {
 
 // navigate back helper
 const goBack = () => {
-  if (window.history.length > 2) router.back()
-  else router.push('/')
+  router.push('/')
 }
 
 // trigger print and auto-return afterwards
