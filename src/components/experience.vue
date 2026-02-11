@@ -18,13 +18,13 @@
         <button
           v-if="showJobsControls && jobsCanPrev"
           class="hidden md:flex btn btn-circle btn-ghost absolute left-2 top-1/2 -translate-y-1/2 z-10"
-          aria-label="Previous jobs"
+          :aria-label="(ui && ui.experience && ui.experience.prevJobsAria) || 'Previous jobs'"
           @click="prevJobs"
         >❮</button>
         <button
           v-if="showJobsControls && jobsCanNext"
           class="hidden md:flex btn btn-circle btn-ghost absolute right-2 top-1/2 -translate-y-1/2 z-10"
-          aria-label="Next jobs"
+          :aria-label="(ui && ui.experience && ui.experience.nextJobsAria) || 'Next jobs'"
           @click="nextJobs"
         >❯</button>
 

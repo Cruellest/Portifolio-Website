@@ -6,11 +6,11 @@
     <div class="bg-base-100/80 backdrop-blur-md rounded-box p-6 sm:p-8 shadow-xl text-center w-[min(90vw,28rem)]">
       <div v-if="status === 'loading'" class="flex flex-col items-center gap-3">
         <span class="loading loading-spinner loading-lg text-primary"></span>
-        <p class="text-base-content/80">{{ message || 'Loading…' }}</p>
+        <p class="text-base-content/80">{{ message || loadingText }}</p>
       </div>
       <div v-else class="flex flex-col items-center gap-3">
         <button class="btn btn-primary w-full" @click="$emit('action')">
-          Return to menu
+          {{ returnButtonText }}
         </button>
         <p class="text-xs text-base-content/60" v-if="message">{{ message }}</p>
       </div>
@@ -19,6 +19,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { getUiStrings } from '../controllers/json-data-controller'
+
 defineProps<{
   show: boolean
   status: 'loading' | 'action'
@@ -28,6 +31,10 @@ defineProps<{
 defineEmits<{
   (e: 'action'): void
 }>()
+
+const ui = computed(() => getUiStrings())
+const loadingText = computed(() => ui.value?.common?.loading || 'Loading…')
+const returnButtonText = computed(() => ui.value?.common?.returnToMenu || 'Return to menu')
 </script>
 
 <style scoped>

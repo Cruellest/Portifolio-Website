@@ -14,7 +14,7 @@
           <div class="profile-section">
             <img 
               :src="personalData.profileImage" 
-              :alt="`Profile Picture of ${personalData.fullName}`"
+              :alt="`${printUi.profilePictureAlt || 'Profile Picture of'} ${personalData.fullName}`"
               class="profile-photo"
             />
             <div class="header-text">
@@ -23,12 +23,12 @@
               <div class="contact-info">
                 <p>
                   <i class="bi bi-telephone-fill contact-icon" aria-hidden="true"></i>
-                  <span class="sr-only">Telefone:</span>
+                  <span class="sr-only">{{ printUi.phoneLabel || 'Phone:' }}</span>
                   {{ personalData.phone }}
                 </p>
                 <p>
                   <i class="bi bi-envelope-fill contact-icon" aria-hidden="true"></i>
-                  <span class="sr-only">Email:</span>
+                  <span class="sr-only">{{ printUi.emailLabel || 'Email:' }}</span>
                   {{ personalData.email }}
                 </p>
                 <p>
@@ -148,6 +148,7 @@ import {
 } from '../controllers/json-data-controller'
 import router from '../router'
 import Loading from '../components/loading.vue'
+import { getUiStrings } from '../controllers/json-data-controller'
 
 const PRINT_FALLBACK_DELAY_MS = 6000
 
@@ -184,7 +185,9 @@ watchEffect(() => {
 // state for overlay
 const overlayVisible = ref(true)
 const overlayStatus = ref('loading') // 'loading' | 'action'
-const overlayMessage = ref('Preparing resume for print…')
+const ui = computed(() => getUiStrings())
+const printUi = computed(() => ui.value?.print ?? {})
+const overlayMessage = ref(ui.value?.print?.preparing || 'Preparing resume for print…')
 
 // helper to return user (back or home)
 const handleOverlayAction = () => {
@@ -193,17 +196,18 @@ const handleOverlayAction = () => {
 }
 
 let fallbackTimer
+let afterPrintHandler
 
 // trigger print and switch overlay to action mode (return button)
 const triggerPrint = () => {
   try {
     window.print()
     overlayStatus.value = 'action'
-    overlayMessage.value = 'Print dialog opened. If not redirected, click to return.'
+    overlayMessage.value = ui.value?.print?.printOpened || 'Print dialog opened. If not redirected, click to return.'
   } catch {
     // if print fails, still show action
     overlayStatus.value = 'action'
-    overlayMessage.value = 'Could not open print dialog. Click to return.'
+    overlayMessage.value = ui.value?.print?.printFailed || 'Could not open print dialog. Click to return.'
   }
 }
 
@@ -214,7 +218,7 @@ onMounted(async () => {
   fallbackTimer = window.setTimeout(() => {
     if (overlayStatus.value !== 'action') {
       overlayStatus.value = 'action'
-      overlayMessage.value = 'Still preparing… You can return to menu.'
+      overlayMessage.value = ui.value?.print?.stillPreparing || 'Still preparing… You can return to menu.'
     }
   }, PRINT_FALLBACK_DELAY_MS)
 
@@ -234,13 +238,18 @@ onMounted(async () => {
     triggerPrint()
   }
 
-  window.addEventListener('afterprint', () => {
+  afterPrintHandler = () => {
     router.push('/')
-  })
+  }
+  window.addEventListener('afterprint', afterPrintHandler, { once: true })
 })
 
 onBeforeUnmount(() => {
   if (fallbackTimer) window.clearTimeout(fallbackTimer)
+  if (afterPrintHandler) {
+    window.removeEventListener('afterprint', afterPrintHandler)
+    afterPrintHandler = null
+  }
 })
 
 // helper para exibir URL sem protocolo/www/query/hash e sem barra final

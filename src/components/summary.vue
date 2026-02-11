@@ -7,7 +7,7 @@
         <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 sm:w-48 sm:h-48 rounded-full bg-primary/15"></div>
         <div class="avatar relative">
           <div class="mask mask-circle w-36 h-36 sm:w-44 sm:h-44 ring ring-offset-2 ring-primary">
-            <img :src="personalData.profileImage" :alt="`Foto de ${personalData.fullName || 'usuário'}`" />
+            <img :src="personalData.profileImage" :alt="`${summaryUi.photoAlt || 'Photo of'} ${personalData.fullName || summaryUi.photoAltFallback || 'user'}`" />
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { getPersonalData, getSummaryData, getSectionsData } from '../controllers/json-data-controller'
+import { getPersonalData, getSummaryData, getSectionsData, getUiStrings } from '../controllers/json-data-controller'
 
 type PersonalData = {
   fullName?: string
@@ -86,6 +86,8 @@ type ContactButton = {
 
 const personalData = computed<PersonalData>(() => getPersonalData() as PersonalData)
 const summaryRaw = computed(() => getSummaryData() as unknown)
+const ui = computed(() => getUiStrings() as any)
+const summaryUi = computed(() => ui.value?.summary ?? {})
 
 const sectionTitles = computed(() => getSectionsData() as any)
 const summaryTitle = computed<string>(() => {
@@ -123,22 +125,22 @@ const contacts = computed<ContactButton[]>(() => {
 
   const arr: ContactButton[] = []
   if (p.phone) {
-    arr.push({ type: 'phone', label: 'Telefone', href: `tel:${p.phone}`, title: String(p.phone), btnClass: accentBtn, icon: 'bi-telephone-fill' })
+    arr.push({ type: 'phone', label: summaryUi.value?.phoneLabel || 'Phone', href: `tel:${p.phone}`, title: String(p.phone), btnClass: accentBtn, icon: 'bi-telephone-fill' })
   }
   if (p.email) {
-    arr.push({ type: 'email', label: 'Email', href: `mailto:${p.email}`, title: String(p.email), btnClass: accentBtn, icon: 'bi-envelope-fill' })
+    arr.push({ type: 'email', label: summaryUi.value?.emailLabel || 'Email', href: `mailto:${p.email}`, title: String(p.email), btnClass: accentBtn, icon: 'bi-envelope-fill' })
   }
   if (p.github) {
     const url = String(p.github)
-    arr.push({ type: 'github', label: 'GitHub', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-github' })
+    arr.push({ type: 'github', label: summaryUi.value?.githubLabel || 'GitHub', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-github' })
   }
   if (p.linkedin) {
     const url = String(p.linkedin)
-    arr.push({ type: 'linkedin', label: 'LinkedIn', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-linkedin' })
+    arr.push({ type: 'linkedin', label: summaryUi.value?.linkedinLabel || 'LinkedIn', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-linkedin' })
   }
   if (p.website) {
     const url = String(p.website)
-    arr.push({ type: 'website', label: 'Website', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-globe2' })
+    arr.push({ type: 'website', label: summaryUi.value?.websiteLabel || 'Website', href: url, title: normalizeUrlDisplay(url), external: true, btnClass: accentBtn, icon: 'bi-globe2' })
   }
   return arr
 })

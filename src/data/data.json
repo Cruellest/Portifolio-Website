@@ -126,6 +126,15 @@
     }
   ],
   "ui": {
+    "summary": {
+      "photoAlt": "Photo of",
+      "photoAltFallback": "user",
+      "phoneLabel": "Phone",
+      "emailLabel": "Email",
+      "githubLabel": "GitHub",
+      "linkedinLabel": "LinkedIn",
+      "websiteLabel": "Website"
+    },
     "skills": {
       "tagline": "Highlights from my toolbox — core stack and supporting technologies",
       "categorySubtitlePrimary": "Core tools I rely on",
@@ -138,20 +147,40 @@
       "companiesLabel": "companies",
       "projectsLabel": "projects",
       "mobileSwipeHint": "Swipe to see more",
+      "prevJobsAria": "Previous jobs",
+      "nextJobsAria": "Next jobs",
       "dateLabel": "Period"
     },
     "projects": {
       "emptyState": "No projects found.",
       "visitButton": "Visit"
     },
+    "search": {
+      "placeholder": "Search...",
+      "close": "Close search",
+      "toggle": "Search",
+      "occurrences": "Occurrences"
+    },
     "common": {
       "prev": "Prev",
       "next": "Next"
+    ,
+      "loading": "Loading…",
+      "returnToMenu": "Return to menu"
     },
     "education": {
       "entryLabel": "entry",
       "entriesLabel": "entries",
       "emptyState": "No education records found."
+    },
+    "print": {
+      "preparing": "Preparing resume for print…",
+      "printOpened": "Print dialog opened. If not redirected, click to return.",
+      "printFailed": "Could not open print dialog. Click to return.",
+      "stillPreparing": "Still preparing… You can return to menu.",
+      "profilePictureAlt": "Profile Picture of",
+      "phoneLabel": "Phone:",
+      "emailLabel": "Email:"
     },
     "theme": {
       "title": "Theme",
@@ -162,7 +191,8 @@
     "menu": {
       "sections": "Sections",
       "actions": "Actions",
-      "downloadResume": "Download Resume"
+      "downloadResume": "Download Resume",
+      "downloadResumeTitle": "Download resume as PDF"
     }
   }
 }

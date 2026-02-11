@@ -126,6 +126,15 @@
     }
   ],
   "ui": {
+    "summary": {
+      "photoAlt": "Foto de",
+      "photoAltFallback": "usuário",
+      "phoneLabel": "Telefone",
+      "emailLabel": "Email",
+      "githubLabel": "GitHub",
+      "linkedinLabel": "LinkedIn",
+      "websiteLabel": "Website"
+    },
     "skills": {
       "tagline": "Destaques da minha caixa de ferramentas — stack principal e tecnologias de apoio",
       "categorySubtitlePrimary": "Ferramentas principais que utilizo",
@@ -138,20 +147,39 @@
       "companiesLabel": "empresas",
       "projectsLabel": "projetos",
       "mobileSwipeHint": "Deslize para ver mais",
+      "prevJobsAria": "Empregos anteriores",
+      "nextJobsAria": "Próximos empregos",
       "dateLabel": "Período"
     },
     "projects": {
       "emptyState": "Nenhum projeto encontrado.",
       "visitButton": "Visitar"
     },
+    "search": {
+      "placeholder": "Pesquisar...",
+      "close": "Fechar pesquisa",
+      "toggle": "Pesquisar",
+      "occurrences": "Ocorrências"
+    },
     "common": {
       "prev": "Ant",
-      "next": "Próx"
+      "next": "Próx",
+      "loading": "Carregando…",
+      "returnToMenu": "Voltar ao menu"
     },
     "education": {
       "entryLabel": "entrada",
       "entriesLabel": "entradas",
       "emptyState": "Nenhum registro de formação encontrado."
+    },
+    "print": {
+      "preparing": "Preparando currículo para impressão…",
+      "printOpened": "Diálogo de impressão aberto. Se não for redirecionado, clique para retornar.",
+      "printFailed": "Não foi possível abrir o diálogo de impressão. Clique para retornar.",
+      "stillPreparing": "Ainda preparando… Você pode retornar ao menu.",
+      "profilePictureAlt": "Foto de perfil de",
+      "phoneLabel": "Telefone:",
+      "emailLabel": "Email:"
     },
     "theme": {
       "title": "Tema",
@@ -162,7 +190,8 @@
     "menu": {
       "sections": "Seções",
       "actions": "Ações",
-      "downloadResume": "Baixar Currículo"
+      "downloadResume": "Baixar Currículo",
+      "downloadResumeTitle": "Baixar currículo em PDF"
     }
   }
 }

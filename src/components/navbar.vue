@@ -59,7 +59,7 @@
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Search..."
+                :placeholder="searchTexts.placeholder"
                 aria-label="Search"
                 :class="[
                   'input input-bordered w-full rounded-full pl-10 pr-12 bg-base-100/95 border-base-300 shadow-lg',
@@ -74,7 +74,7 @@
               <button
                 class="btn btn-circle btn-ghost absolute right-1.5 top-1/2 -translate-y-1/2"
                 @click="isSearchOpen = false"
-                title="Close search"
+                :title="searchTexts.close"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -89,14 +89,14 @@
                 <div class="join">
                   <button
                     class="btn btn-sm btn-outline join-item rounded-full bg-base-100 border-base-300 text-base-content/80 shadow hover:bg-base-200"
-                    title="Previous"
+                    :title="commonTexts.prev"
                     @click="prevMatch"
                   >
                     <i class="bi bi-chevron-up"></i>
                   </button>
                   <button
                     class="btn btn-sm btn-outline join-item rounded-full bg-base-100 border-base-300 text-base-content/80 shadow hover:bg-base-200"
-                    title="Next"
+                    :title="commonTexts.next"
                     @click="nextMatch"
                   >
                     <i class="bi bi-chevron-down"></i>
@@ -105,7 +105,7 @@
                 <span
                   v-if="totalMatches > 0"
                   class="rounded-full bg-base-100 border border-base-300 text-base-content/80 text-xs px-2 py-1 shadow leading-none"
-                  title="Occurrences"
+                  :title="searchTexts.occurrences"
                 >
                   {{ currentIndex + 1 }} / {{ totalMatches }}
                 </span>
@@ -122,7 +122,7 @@
             sizeClasses.searchBtn
           ]"
           @click="toggleSearch"
-          title="Search"
+          :title="searchTexts.toggle"
           ref="searchToggleBtn"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" :class="isSearchOpen ? 'opacity-100' : 'opacity-80'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -189,7 +189,7 @@
       <button 
         @click="downloadPDF"
         :class="['btn btn-ghost btn-circle rounded-full flex-shrink-0 hidden', sizeClasses.downloadBtn, sizeClasses.navbreakpoint]"
-        title="Download resume as PDF"
+        :title="menuTexts.downloadResumeTitle || 'Download resume as PDF'"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -252,9 +252,8 @@
 
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { getPersonalData, getSectionsData, setLanguage as setAppLanguage, ensureLanguageFromLocalStorage as ensureLangFromStorage, getCurrentLanguageCode } from '../controllers/json-data-controller'
+import { getPersonalData, getSectionsData, getUiStrings, setLanguage as setAppLanguage, ensureLanguageFromLocalStorage as ensureLangFromStorage, getCurrentLanguageCode } from '../controllers/json-data-controller'
 import languagesData from '../data/languages.json'
-import appData from '../data/data.json'
 
 const router = useRouter()
 
@@ -669,19 +668,26 @@ onBeforeUnmount(() => {
   }
 })
 
-// ---------- Remaining computed texts (unchanged) ----------
-const themeTexts = computed(() => appData?.ui?.theme ?? {
-  title: 'Tema',
+// ---------- Remaining computed texts (reactive via getUiStrings) ----------
+const ui = computed(() => getUiStrings() || {})
+
+const themeTexts = computed(() => ui.value?.theme ?? {
+  title: 'Theme',
   auto: 'Auto',
-  light: 'Claro',
-  dark: 'Escuro'
+  light: 'Light',
+  dark: 'Dark'
 })
 
-const menuTexts = computed(() => appData?.ui?.menu ?? {
+const menuTexts = computed(() => ui.value?.menu ?? {
   sections: 'Sections',
   actions: 'Actions',
-  downloadResume: 'Download Resume'
+  downloadResume: 'Download Resume',
+  downloadResumeTitle: 'Download resume as PDF'
 })
+
+const commonTexts = computed(() => ui.value?.common ?? { prev: 'Prev', next: 'Next', loading: 'Loading…', returnToMenu: 'Return to menu' })
+
+const searchTexts = computed(() => ui.value?.search ?? { placeholder: 'Search...', close: 'Close search', toggle: 'Search', occurrences: 'Occurrences' })
 </script>
 
 <style scoped>
