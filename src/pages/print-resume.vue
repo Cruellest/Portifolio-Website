@@ -242,7 +242,10 @@ const triggerPrint = async () => {
   await nextTick()
   try {
     window.print()
-    goBack()
+    // Do NOT call goBack() here. On Android, window.print() returns
+    // immediately (async) and navigating away would make the print
+    // preview capture the homepage instead of the resume.
+    // Navigation back is handled by the 'afterprint' event listener.
   } catch {
     overlayStatus.value = 'action'
     overlayMessage.value = ui.value?.print?.printFailed || 'Could not open print dialog. Click to return.'
