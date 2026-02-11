@@ -1,20 +1,4 @@
 <template>
-  <!-- Back button overlay – OUTSIDE resume-container so it uses full viewport -->
-  <Teleport to="body">
-    <div
-      v-if="showBackButton"
-      class="back-overlay"
-    >
-      <div class="bg-base-100/80 backdrop-blur-md rounded-box p-6 sm:p-8 shadow-xl text-center w-[min(90vw,28rem)]">
-        <div class="flex flex-col items-center gap-3">
-          <p class="text-base-content/80">{{ printUi.printDone || 'Done!' }}</p>
-          <button class="btn btn-primary w-full" @click="goBack">
-            {{ ui?.common?.returnToMenu || 'Return to menu' }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </Teleport>
   <div class="resume-container">
     <!-- Loading overlay -->
     <div
@@ -161,10 +145,11 @@ const jobs = computed(() => {
 })
 
 const overlayVisible = ref(true)
-const showBackButton = ref(false)
 const ui = computed(() => getUiStrings())
 const printUi = computed(() => ui.value?.print ?? {})
 const overlayMessage = ref('')
+
+let visibilityHandler = null
 
 // A4 content area in px
 const A4_CONTENT_WIDTH_PX = 180 * 3.7795
@@ -215,9 +200,17 @@ const triggerPrint = async () => {
       // Desktop: window.print() blocked (sync), dialog already closed
       goBack()
     } else {
-      // Android/mobile: window.print() returned immediately (async)
-      // Show a "back to site" button for when the user finishes printing
-      showBackButton.value = true
+      // Android/mobile: window.print() is async.
+      // The print UI opens as a separate activity. When the user closes it,
+      // the page becomes visible again. Use visibilitychange to detect that.
+      visibilityHandler = () => {
+        if (document.visibilityState === 'visible') {
+          document.removeEventListener('visibilitychange', visibilityHandler)
+          visibilityHandler = null
+          goBack()
+        }
+      }
+      document.addEventListener('visibilitychange', visibilityHandler)
     }
   } catch {
     goBack()
@@ -238,7 +231,10 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  // cleanup if needed
+  if (visibilityHandler) {
+    document.removeEventListener('visibilitychange', visibilityHandler)
+    visibilityHandler = null
+  }
 })
 
 const urlDisplay = (url) => {
@@ -265,25 +261,6 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 </style>
 
-<!-- Non-scoped: Teleported back-overlay lives outside component DOM -->
-<style>
-.back-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: grid;
-  place-items: center;
-  background: oklch(0.95 0 0 / 0.8);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-@media print {
-  .back-overlay {
-    display: none !important;
-  }
-}
-</style>
 
 <style scoped>
 * {
