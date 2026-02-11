@@ -7,7 +7,7 @@
       :message="overlayMessage"
       @action="handleOverlayAction"
     />
-    <div class="resume-content" data-theme="light-custom">
+    <div class="resume-content" ref="resumeContent" data-theme="light-custom">
       <!-- Header com foto e info -->
       <header class="header">
         <div class="header-content">
@@ -154,6 +154,7 @@ const PRINT_FALLBACK_DELAY_MS = 6000
 
 const isDataLoaded = ref(false)
 const isImageLoaded = ref(false)
+const resumeContent = ref(null)
 
 const personalData = computed(() => getPersonalData())
 const sectionTitles = computed(() => getSectionsData())
@@ -198,14 +199,47 @@ const handleOverlayAction = () => {
 let fallbackTimer
 let afterPrintHandler
 
-// trigger print and switch overlay to action mode (return button)
-const triggerPrint = () => {
+// Auto-fit: measure content and scale down only if it overflows
+const fitToPage = () => {
+  const el = resumeContent.value
+  if (!el) return
+  // Reset any previous transform
+  el.style.transform = ''
+  el.style.transformOrigin = 'top left'
+  // Get the available height (container inner height = 297mm - 2*15mm padding = 267mm)
+  const container = el.parentElement
+  if (!container) return
+  const availableHeight = container.clientHeight
+  const availableWidth = container.clientWidth
+  // Measure actual content size (scrollHeight includes overflow)
+  const contentHeight = el.scrollHeight
+  const contentWidth = el.scrollWidth
+  // Calculate scale factor (only shrink, never enlarge)
+  const scaleY = contentHeight > availableHeight ? availableHeight / contentHeight : 1
+  const scaleX = contentWidth > availableWidth ? availableWidth / contentWidth : 1
+  const scale = Math.min(scaleX, scaleY, 1)
+  if (scale < 1) {
+    el.style.transform = `scale(${scale})`
+    el.style.width = `${100 / scale}%`
+  }
+}
+
+// navigate back helper
+const goBack = () => {
+  if (window.history.length > 2) router.back()
+  else router.push('/')
+}
+
+// trigger print and auto-return afterwards
+const triggerPrint = async () => {
+  // fit content to one page before printing
+  await nextTick()
+  fitToPage()
+  await nextTick()
   try {
     window.print()
-    overlayStatus.value = 'action'
-    overlayMessage.value = ui.value?.print?.printOpened || 'Print dialog opened. If not redirected, click to return.'
+    goBack()
   } catch {
-    // if print fails, still show action
     overlayStatus.value = 'action'
     overlayMessage.value = ui.value?.print?.printFailed || 'Could not open print dialog. Click to return.'
   }
@@ -222,7 +256,7 @@ onMounted(async () => {
     }
   }, PRINT_FALLBACK_DELAY_MS)
 
-  const profileImg = document.querySelector('img[alt*="Profile Picture"]')
+  const profileImg = document.querySelector('.profile-photo')
   if (profileImg) {
     if (profileImg.complete) {
       triggerPrint()
@@ -239,7 +273,7 @@ onMounted(async () => {
   }
 
   afterPrintHandler = () => {
-    router.push('/')
+    goBack()
   }
   window.addEventListener('afterprint', afterPrintHandler, { once: true })
 })
@@ -287,6 +321,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 .resume-container {
   width: 210mm;
   height: 297mm;
+  max-height: 297mm;
   margin: 0 auto;
   background: white;
   padding: 15mm;
@@ -294,12 +329,14 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
   font-size: 14px;
   line-height: 1.6;
   color: #333;
+  overflow: hidden;
 }
 
 .resume-content {
   display: flex;
   flex-direction: column;
   gap: 5mm;
+  transform-origin: top left;
 }
 
 .header {
@@ -307,6 +344,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
   padding-bottom: 6mm;
   page-break-inside: avoid;
   page-break-after: avoid;
+  flex-shrink: 0;
 }
 
 .header-content {
@@ -388,6 +426,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
   grid-template-columns: 1fr 1fr;
   gap: 8mm;
   flex: 1;
+  min-height: 0;
 }
 
 .section {
@@ -419,7 +458,6 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 
 .skill-item {
   background: color-mix(in oklch, var(--color-primary) 10%, var(--color-base-100));
-  /* fallback se color-mix não for suportado */
   background: var(--color-base-100);
   padding: 3mm 4mm;
   border-radius: 3px;
@@ -444,7 +482,6 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 
 .skill-item span {
   display: inline-block;
-  /* reforça paleta do tema na impressão */
   background: color-mix(in oklch, var(--color-primary) 20%, transparent) !important;
   color: var(--color-primary) !important;
   padding: 2mm 3mm !important;
@@ -531,24 +568,30 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
   .resume-container {
     width: 210mm;
     height: 297mm;
+    max-height: 297mm;
     margin: 0;
     padding: 15mm;
     background: white;
     box-shadow: none;
-    page-break-after: always;
+    overflow: hidden;
+    page-break-after: avoid;
+    page-break-before: avoid;
   }
 
-  /* Two-column flow */
+  .resume-content {
+    transform-origin: top left;
+  }
+
+  /* Two-column grid */
   .content-grid {
-    display: block !important;
-    column-count: 2;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
     column-gap: 8mm;
   }
 
-  /* Flatten column wrappers */
   .left-column,
   .right-column {
-    display: contents !important;
+    overflow: hidden;
   }
 
   /* Keep header unbroken */
@@ -558,7 +601,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
     -webkit-column-break-inside: avoid !important;
   }
 
-  /* Allow sections and items to split across columns/pages */
+  /* Allow sections and items to split but never create new page */
   .section,
   .skill-item,
   .job,
@@ -571,16 +614,14 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
     break-inside: auto !important;
     page-break-inside: auto !important;
     -webkit-column-break-inside: auto !important;
+    page-break-before: avoid !important;
+    page-break-after: avoid !important;
   }
 
-  /* Optional: reduce orphans/widows for nicer splits */
   p, li {
     orphans: 2;
     widows: 2;
   }
-
-  /* Remove previous avoid rules that could block splitting */
-  /* (Make sure any prior 'page-break-inside: avoid' on these is removed) */
 }
 
 @page {
