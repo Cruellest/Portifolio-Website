@@ -198,6 +198,11 @@ const handleOverlayAction = () => {
 let fallbackTimer
 let afterPrintHandler
 
+// A4 content area in px (210mm - 2*15mm = 180mm width, 297mm - 2*15mm = 267mm height)
+// 1mm ≈ 3.7795px
+const A4_CONTENT_WIDTH_PX = 180 * 3.7795
+const A4_CONTENT_HEIGHT_PX = 267 * 3.7795
+
 // Auto-fit: measure content and scale down only if it overflows
 const fitToPage = () => {
   const el = resumeContent.value
@@ -205,11 +210,12 @@ const fitToPage = () => {
   // Reset any previous transform
   el.style.transform = ''
   el.style.transformOrigin = 'top left'
-  // Get the available height (container inner height = 297mm - 2*15mm padding = 267mm)
-  const container = el.parentElement
-  if (!container) return
-  const availableHeight = container.clientHeight
-  const availableWidth = container.clientWidth
+  el.style.width = ''
+
+  // Use fixed A4 dimensions (mobile viewports report wrong clientHeight/Width)
+  const availableHeight = A4_CONTENT_HEIGHT_PX
+  const availableWidth = A4_CONTENT_WIDTH_PX
+
   // Measure actual content size (scrollHeight includes overflow)
   const contentHeight = el.scrollHeight
   const contentWidth = el.scrollWidth
@@ -318,6 +324,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 
 .resume-container {
   width: 210mm;
+  min-width: 210mm;
   height: 297mm;
   max-height: 297mm;
   margin: 0 auto;
@@ -552,9 +559,11 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 /* Print styles */
 @media print {
   html, body {
-    margin: 0;
-    padding: 0;
-    background: white;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 210mm !important;
+    min-width: 210mm !important;
+    background: white !important;
   }
 
   * {
@@ -564,32 +573,52 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
   }
 
   .resume-container {
-    width: 210mm;
-    height: 297mm;
-    max-height: 297mm;
-    margin: 0;
-    padding: 15mm;
-    background: white;
-    box-shadow: none;
-    overflow: hidden;
+    width: 210mm !important;
+    min-width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 15mm !important;
+    background: white !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
     page-break-after: avoid;
     page-break-before: avoid;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
   }
 
   .resume-content {
     transform-origin: top left;
+    width: 100% !important;
   }
 
   /* Two-column grid */
   .content-grid {
     display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 8mm;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 8mm !important;
   }
 
   .left-column,
   .right-column {
-    overflow: hidden;
+    overflow: hidden !important;
+    min-width: 0 !important;
+  }
+
+  /* Force profile section layout */
+  .header-content,
+  .profile-section {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+
+  .profile-photo {
+    width: 45mm !important;
+    height: 45mm !important;
+    flex-shrink: 0 !important;
   }
 
   /* Keep header unbroken */
