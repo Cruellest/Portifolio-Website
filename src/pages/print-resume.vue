@@ -1,12 +1,17 @@
 <template>
   <div class="resume-container">
-    <!-- Loading overlay (no theme applied here) -->
-    <Loading
-      :show="overlayVisible"
-      :status="overlayStatus"
-      :message="overlayMessage"
-      @action="handleOverlayAction"
-    />
+    <!-- Loading overlay – hidden from print via v-if (removed from DOM before print) -->
+    <div
+      v-if="overlayVisible"
+      class="fixed inset-0 z-50 grid place-items-center bg-base-100/60 backdrop-blur-sm"
+    >
+      <div class="bg-base-100/80 backdrop-blur-md rounded-box p-6 sm:p-8 shadow-xl text-center w-[min(90vw,28rem)]">
+        <div class="flex flex-col items-center gap-3">
+          <span class="loading loading-spinner loading-lg text-primary"></span>
+          <p class="text-base-content/80">{{ overlayMessage }}</p>
+        </div>
+      </div>
+    </div>
     <div class="resume-content" ref="resumeContent" data-theme="light-custom">
       <!-- Header com foto e info -->
       <header class="header">
@@ -49,15 +54,11 @@
       <div class="content-grid">
         <!-- Coluna esquerda -->
         <div class="left-column">
-          <!-- Resumo profissional -->
           <section class="section">
             <h2>{{ sectionTitles.summary }}</h2>
-            <p>
-              {{ summaryData }}
-            </p>
+            <p>{{ summaryData }}</p>
           </section>
 
-          <!-- Habilidades -->
           <section class="section">
             <h2>{{ sectionTitles.skills }}</h2>
             <div class="skills-grid">
@@ -82,7 +83,6 @@
 
         <!-- Coluna direita -->
         <div class="right-column">
-          <!-- Experiência -->
           <section class="section">
             <h2>{{ sectionTitles.experience }}</h2>
             <div class="job" v-for="(job, index) in jobs" :key="index">
@@ -100,7 +100,6 @@
             </div>
           </section>
 
-          <!-- Educação -->
           <section class="section">
             <h2>{{ sectionTitles.education }}</h2>
             <div class="education" v-for="(edu, index) in educationData" :key="index">
@@ -112,24 +111,6 @@
               <p class="location">{{ edu.location }}</p>
             </div>
           </section>
-
-          <!-- Projetos -->
-          <!-- REMOVED: Projects section on resume -->
-          <!--
-          <section class="section" v-if="experienceData?.projects?.length">
-            <h2>{{ sectionTitles.projects || 'Projects' }}</h2>
-            <div class="project" v-for="(p, i) in experienceData.projects" :key="i">
-              <div class="project-header">
-                <h3>{{ p.name }}</h3>
-              </div>
-              <p class="project-desc">{{ p.description }}</p>
-              <p class="project-link">
-                <i class="bi bi-link-45deg contact-icon" aria-hidden="true"></i>
-                <a :href="p.link" target="_blank" rel="noopener" :title="p.link">{{ p.link }}</a>
-              </p>
-            </div>
-          </section>
-          -->
         </div>
       </div>
     </div>
@@ -137,23 +118,18 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watchEffect, nextTick, onBeforeUnmount } from 'vue'
+import { computed, onMounted, ref, nextTick, onBeforeUnmount } from 'vue'
 import {
   getPersonalData,
   getSectionsData,
   getSummaryData,
   getSkillsData,
   getExperienceData,
-  getEducationData
+  getEducationData,
+  getUiStrings
 } from '../controllers/json-data-controller'
 import router from '../router'
-import Loading from '../components/loading.vue'
-import { getUiStrings } from '../controllers/json-data-controller'
 
-const PRINT_FALLBACK_DELAY_MS = 6000
-
-const isDataLoaded = ref(false)
-const isImageLoaded = ref(false)
 const resumeContent = ref(null)
 
 const personalData = computed(() => getPersonalData())
@@ -162,66 +138,33 @@ const summaryData = computed(() => getSummaryData())
 const skillsData = computed(() => getSkillsData())
 const experienceData = computed(() => getExperienceData())
 const educationData = computed(() => getEducationData())
-// Consome apenas jobs do controller (compatível com formato antigo em array)
 const jobs = computed(() => {
   const exp = experienceData.value
   if (Array.isArray(exp)) return exp
   return Array.isArray(exp?.jobs) ? exp.jobs : []
 })
 
-watchEffect(() => {
-  const hasAllData = 
-    personalData.value &&
-    sectionTitles.value &&
-    summaryData.value &&
-    skillsData.value &&
-    experienceData.value &&
-    educationData.value
-
-  if (hasAllData && Object.keys(personalData.value).length > 0) {
-    isDataLoaded.value = true
-  }
-})
-
-// state for overlay
 const overlayVisible = ref(true)
-const overlayStatus = ref('loading') // 'loading' | 'action'
 const ui = computed(() => getUiStrings())
 const printUi = computed(() => ui.value?.print ?? {})
-const overlayMessage = ref(ui.value?.print?.preparing || 'Preparing resume for print…')
+const overlayMessage = ref('')
 
-// helper to return user (back or home)
-const handleOverlayAction = () => {
-  router.push('/')
-}
-
-let fallbackTimer
 let afterPrintHandler
 
-// A4 content area in px (210mm - 2*15mm = 180mm width, 297mm - 2*15mm = 267mm height)
-// 1mm ≈ 3.7795px
+// A4 content area in px
 const A4_CONTENT_WIDTH_PX = 180 * 3.7795
 const A4_CONTENT_HEIGHT_PX = 267 * 3.7795
 
-// Auto-fit: measure content and scale down only if it overflows
 const fitToPage = () => {
   const el = resumeContent.value
   if (!el) return
-  // Reset any previous transform
   el.style.transform = ''
   el.style.transformOrigin = 'top left'
   el.style.width = ''
-
-  // Use fixed A4 dimensions (mobile viewports report wrong clientHeight/Width)
-  const availableHeight = A4_CONTENT_HEIGHT_PX
-  const availableWidth = A4_CONTENT_WIDTH_PX
-
-  // Measure actual content size (scrollHeight includes overflow)
   const contentHeight = el.scrollHeight
   const contentWidth = el.scrollWidth
-  // Calculate scale factor (only shrink, never enlarge)
-  const scaleY = contentHeight > availableHeight ? availableHeight / contentHeight : 1
-  const scaleX = contentWidth > availableWidth ? availableWidth / contentWidth : 1
+  const scaleY = contentHeight > A4_CONTENT_HEIGHT_PX ? A4_CONTENT_HEIGHT_PX / contentHeight : 1
+  const scaleX = contentWidth > A4_CONTENT_WIDTH_PX ? A4_CONTENT_WIDTH_PX / contentWidth : 1
   const scale = Math.min(scaleX, scaleY, 1)
   if (scale < 1) {
     el.style.transform = `scale(${scale})`
@@ -229,71 +172,60 @@ const fitToPage = () => {
   }
 }
 
-// navigate back helper
 const goBack = () => {
   router.push('/')
 }
 
-// trigger print and auto-return afterwards
 const triggerPrint = async () => {
-  // fit content to one page before printing
+  // 1. Remove overlay from DOM so only resume content is visible
+  overlayVisible.value = false
   await nextTick()
+
+  // 2. Fit content to A4
   fitToPage()
   await nextTick()
+
+  // 3. Wait for a repaint so the browser sees the final layout
+  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+
+  // 4. Register afterprint to go back AFTER user closes print dialog
+  if (afterPrintHandler) {
+    window.removeEventListener('afterprint', afterPrintHandler)
+  }
+  afterPrintHandler = () => {
+    goBack()
+  }
+  window.addEventListener('afterprint', afterPrintHandler, { once: true })
+
+  // 5. Open print dialog
   try {
     window.print()
-    // Do NOT call goBack() here. On Android, window.print() returns
-    // immediately (async) and navigating away would make the print
-    // preview capture the homepage instead of the resume.
-    // Navigation back is handled by the 'afterprint' event listener.
   } catch {
-    overlayStatus.value = 'action'
-    overlayMessage.value = ui.value?.print?.printFailed || 'Could not open print dialog. Click to return.'
+    // If print fails, go back
+    goBack()
   }
 }
 
 onMounted(async () => {
   await nextTick()
-
-  // fallback if print dialog doesn’t appear
-  fallbackTimer = window.setTimeout(() => {
-    if (overlayStatus.value !== 'action') {
-      overlayStatus.value = 'action'
-      overlayMessage.value = ui.value?.print?.stillPreparing || 'Still preparing… You can return to menu.'
-    }
-  }, PRINT_FALLBACK_DELAY_MS)
+  overlayMessage.value = printUi.value?.preparing || 'Preparing resume…'
 
   const profileImg = document.querySelector('.profile-photo')
-  if (profileImg) {
-    if (profileImg.complete) {
-      triggerPrint()
-    } else {
-      profileImg.addEventListener('load', () => {
-        triggerPrint()
-      }, { once: true })
-      profileImg.addEventListener('error', () => {
-        triggerPrint()
-      }, { once: true })
-    }
+  if (profileImg && !profileImg.complete) {
+    profileImg.addEventListener('load', () => triggerPrint(), { once: true })
+    profileImg.addEventListener('error', () => triggerPrint(), { once: true })
   } else {
-    triggerPrint()
+    await triggerPrint()
   }
-
-  afterPrintHandler = () => {
-    goBack()
-  }
-  window.addEventListener('afterprint', afterPrintHandler, { once: true })
 })
 
 onBeforeUnmount(() => {
-  if (fallbackTimer) window.clearTimeout(fallbackTimer)
   if (afterPrintHandler) {
     window.removeEventListener('afterprint', afterPrintHandler)
     afterPrintHandler = null
   }
 })
 
-// helper para exibir URL sem protocolo/www/query/hash e sem barra final
 const urlDisplay = (url) => {
   if (!url) return ''
   try {
@@ -357,7 +289,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 
 .header-content {
   display: flex;
-  justify-content: flex-start; /* was space-between */
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 12mm;
 }
@@ -391,7 +323,7 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
 }
 
 .contact-info {
-  text-align: left; /* was right */
+  text-align: left;
   font-size: 12px;
   flex-shrink: 0;
 }
@@ -402,13 +334,13 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
   display: flex;
   align-items: center;
   gap: 6px;
-  justify-content: flex-start; /* was flex-end */
+  justify-content: flex-start;
 }
 
 .contact-info a {
   color: var(--color-primary);
   text-decoration: none;
-  overflow-wrap: anywhere; /* allow long URLs to wrap */
+  overflow-wrap: anywhere;
 }
 
 .contact-icon {
@@ -572,7 +504,6 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    color-adjust: exact !important;
   }
 
   .resume-container {
@@ -597,7 +528,6 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
     width: 100% !important;
   }
 
-  /* Two-column grid */
   .content-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
@@ -610,7 +540,6 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
     min-width: 0 !important;
   }
 
-  /* Force profile section layout */
   .header-content,
   .profile-section {
     display: flex !important;
@@ -624,26 +553,20 @@ const linkedinDisplay = computed(() => urlDisplay(personalData.value?.linkedin |
     flex-shrink: 0 !important;
   }
 
-  /* Keep header unbroken */
   .header {
     break-inside: avoid !important;
     page-break-inside: avoid !important;
-    -webkit-column-break-inside: avoid !important;
   }
 
-  /* Allow sections and items to split but never create new page */
   .section,
   .skill-item,
   .job,
   .education,
   .skills-grid,
   .job ul,
-  .job li,
-  .education ul,
-  .education li {
+  .job li {
     break-inside: auto !important;
     page-break-inside: auto !important;
-    -webkit-column-break-inside: auto !important;
     page-break-before: avoid !important;
     page-break-after: avoid !important;
   }
