@@ -21,55 +21,55 @@
     {
       "category": "Linguagens & Frameworks",
       "skill_list": [
-        {"name": "Python", "level": "primary"},
-        {"name": "JavaScript", "level": "primary"},
-        {"name": "Java", "level": "primary"},
-        {"name": "Kotlin", "level": "primary"},
-        {"name": "Flutter", "level": "secondary"},
-        {"name": "Dart", "level": "secondary"},
-        {"name": "Objective C/C++", "level": "secondary"},
-        {"name": "React", "level": "secondary"},
-        {"name": "React Native", "level": "secondary"},
-        {"name": "Vue.js", "level": "primary"},
-        {"name": "FastApi", "level": "secondary"},
-        {"name": "Flask", "level": "secondary"}
+        { "name": "Python", "level": "primary" },
+        { "name": "JavaScript", "level": "primary" },
+        { "name": "Java", "level": "primary" },
+        { "name": "Kotlin", "level": "primary" },
+        { "name": "Flutter", "level": "secondary" },
+        { "name": "Dart", "level": "secondary" },
+        { "name": "Objective C/C++", "level": "secondary" },
+        { "name": "React", "level": "secondary" },
+        { "name": "React Native", "level": "secondary" },
+        { "name": "Vue.js", "level": "primary" },
+        { "name": "FastApi", "level": "secondary" },
+        { "name": "Flask", "level": "secondary" }
       ]
     },
     {
       "category": "DevOps, Nuvem & Virtualização",
       "skill_list": [
-        {"name": "Docker", "level": "primary"},
-        {"name": "Kubernetes", "level": "primary"},
-        {"name": "Podman", "level": "secondary"},
-        {"name": "Ansible", "level": "primary"},
-        {"name": "Harbor", "level": "secondary"},
-        {"name": "Argo CD", "level": "primary"},
-        {"name": "KVM", "level": "primary"},
-        {"name": "QEMU", "level": "secondary"}
+        { "name": "Docker", "level": "primary" },
+        { "name": "Kubernetes", "level": "primary" },
+        { "name": "Podman", "level": "secondary" },
+        { "name": "Ansible", "level": "primary" },
+        { "name": "Harbor", "level": "secondary" },
+        { "name": "Argo CD", "level": "primary" },
+        { "name": "KVM", "level": "primary" },
+        { "name": "QEMU", "level": "secondary" }
       ]
     },
     {
       "category": "Metodologias, Ferramentas & Conceitos",
       "skill_list": [
-        {"name": "Scrum", "level": "secondary"},
-        {"name": "Kanban", "level": "secondary"},
-        {"name": "GIT", "level": "primary"},
-        {"name": "Lean Inception", "level": "primary"},
-        {"name": "Planning Poker", "level": "secondary"},
-        {"name": "DevOps", "level": "primary"},
-        {"name": "Arquitetura de Software", "level": "primary"},
-        {"name": "Engenharia de Requisitos", "level": "secondary"},
-        {"name": "Teste de Software", "level": "primary"},
-        {"name": "CI/CD", "level": "primary"},
-        {"name": "Microsserviços", "level": "primary"},
-        {"name": "Metodologias Ágeis", "level": "primary"}
+        { "name": "Scrum", "level": "secondary" },
+        { "name": "Kanban", "level": "secondary" },
+        { "name": "GIT", "level": "primary" },
+        { "name": "Lean Inception", "level": "primary" },
+        { "name": "Planning Poker", "level": "secondary" },
+        { "name": "DevOps", "level": "primary" },
+        { "name": "Arquitetura de Software", "level": "primary" },
+        { "name": "Engenharia de Requisitos", "level": "secondary" },
+        { "name": "Teste de Software", "level": "primary" },
+        { "name": "CI/CD", "level": "primary" },
+        { "name": "Microsserviços", "level": "primary" },
+        { "name": "Metodologias Ágeis", "level": "primary" }
       ]
     },
     {
       "category": "Idiomas",
       "skill_list": [
-        {"name": "Português (Nativo)", "level": "primary"},
-        {"name": "Inglês (Fluente)", "level": "primary"}
+        { "name": "Português (Nativo)", "level": "primary" },
+        { "name": "Inglês (Fluente)", "level": "primary" }
       ]
     }
   ],
@@ -126,14 +126,14 @@
     }
   ],
   "ui": {
-    "summary": {
+    "hero": {
       "photoAlt": "Foto de",
-      "photoAltFallback": "usuário",
       "phoneLabel": "Telefone",
       "emailLabel": "Email",
       "githubLabel": "GitHub",
       "linkedinLabel": "LinkedIn",
-      "websiteLabel": "Website"
+      "websiteLabel": "Website",
+      "scrollHint": "Role para explorar"
     },
     "skills": {
       "tagline": "Destaques da minha caixa de ferramentas — stack principal e tecnologias de apoio",
@@ -174,10 +174,6 @@
     },
     "print": {
       "preparing": "Preparando currículo para impressão…",
-      "printDone": "Pronto!",
-      "printOpened": "Diálogo de impressão aberto. Se não for redirecionado, clique para retornar.",
-      "printFailed": "Não foi possível abrir o diálogo de impressão. Clique para retornar.",
-      "stillPreparing": "Ainda preparando… Você pode retornar ao menu.",
       "profilePictureAlt": "Foto de perfil de",
       "phoneLabel": "Telefone:",
       "emailLabel": "Email:"
@@ -191,8 +187,10 @@
     "menu": {
       "sections": "Seções",
       "actions": "Ações",
-      "downloadResume": "Baixar Currículo",
-      "downloadResumeTitle": "Baixar currículo em PDF"
+      "downloadResume": "Currículo (PDF)",
+      "downloadResumeTitle": "Baixar o currículo visual em PDF",
+      "downloadResumeAts": "Currículo ATS (PDF)",
+      "downloadResumeAtsTitle": "Baixar o currículo compatível com ATS em PDF"
     }
   }
 }
