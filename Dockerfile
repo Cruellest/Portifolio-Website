@@ -1,15 +1,14 @@
-#Multi-stage build
-FROM oven/bun:latest AS build-stage
+# Multi-stage build
+FROM oven/bun:1.3 AS build-stage
 
-# Set working directory
 WORKDIR /app
-# Copy package.json and package-lock.json
-COPY package*.json ./
-# Install dependencies
-RUN bun install
-# Copy application code
+
+# Install the exact dependency set verified by CI (quality.yml)
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
+
+# Copy application code and build
 COPY . .
-# Build the application
 RUN bun run build
 
 # Production stage
