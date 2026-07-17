@@ -30,8 +30,7 @@ function initTheme() {
   let saved: string | null = null
   try {
     saved = localStorage.getItem(THEME_STORAGE_KEY)
-  } catch {
-  }
+  } catch {}
   mode.value = saved === 'light' || saved === 'dark' ? saved : 'auto'
   applyTheme(mode.value)
 }
@@ -43,8 +42,7 @@ export function useTheme() {
     mode.value = newMode
     try {
       localStorage.setItem(THEME_STORAGE_KEY, newMode)
-    } catch {
-    }
+    } catch {}
     applyTheme(newMode)
   }
 
