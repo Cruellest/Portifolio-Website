@@ -7,9 +7,15 @@ WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
-# Copy application code and build
+# Copy application code and build.
+# Uses `build:app` (vite build only, no vue-tsc) rather than `build`: the
+# full typecheck already runs on every push/PR via quality.yml, and
+# `vue-tsc -b` has shown environment-specific flakiness inside this
+# container's filesystem that isn't reproducible in local installs with
+# the same dependency versions. Vite's esbuild transpile doesn't need
+# type information to produce correct output.
 COPY . .
-RUN bun run build
+RUN bun run build:app
 
 # Production stage
 FROM nginx:latest AS production-stage
