@@ -24,14 +24,14 @@
           role="search"
         >
           <div class="flex items-center gap-3 px-4 py-3">
-            <i class="bi bi-search text-base-content/50" aria-hidden="true"></i>
+            <i class="bi bi-search text-base-content/70" aria-hidden="true"></i>
             <input
               ref="inputRef"
               v-model="query"
               type="text"
               :placeholder="ui.search.placeholder"
               :aria-label="ui.search.toggle"
-              class="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-base-content/40"
+              class="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-base-content/75"
               @keydown.enter.exact.prevent="nextMatch"
               @keydown.enter.shift.prevent="prevMatch"
               @keydown.escape.prevent="close"
@@ -45,7 +45,7 @@
             </span>
             <span
               v-else-if="query.trim()"
-              class="whitespace-nowrap rounded-full bg-base-200 px-2.5 py-1 text-xs text-base-content/50"
+              class="whitespace-nowrap rounded-full bg-base-200 px-2.5 py-1 text-xs text-base-content/70"
             >
               0
             </span>

@@ -398,7 +398,7 @@ onMounted(async () => {
 
 .location {
   font-size: 10.5px;
-  color: #8b8694;
+  color: #5f5a68;
   margin-bottom: 1mm !important;
   page-break-after: avoid;
 }

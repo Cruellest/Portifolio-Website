@@ -20,7 +20,7 @@
               >
                 {{ category.name }}
               </h3>
-              <p class="text-xs text-base-content/60 sm:text-sm">{{ category.subtitle }}</p>
+              <p class="text-xs text-base-content/75 sm:text-sm">{{ category.subtitle }}</p>
             </div>
           </div>
 

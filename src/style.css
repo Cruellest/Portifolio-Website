@@ -22,10 +22,11 @@
   --color-base-300: oklch(0.923 0.01 300);
   --color-base-content: oklch(0.24 0.02 300);
 
-  --color-primary: oklch(0.54 0.21 302);
+  /* L 0.47 mantem o roxo mas leva o texto a 7.6:1 sobre base-100 (WCAG AAA) */
+  --color-primary: oklch(0.47 0.21 302);
   --color-primary-content: oklch(0.99 0 0);
 
-  --color-secondary: oklch(0.46 0.2 305);
+  --color-secondary: oklch(0.42 0.2 305);
   --color-secondary-content: oklch(0.99 0 0);
 
   --color-accent: oklch(0.72 0.13 305);

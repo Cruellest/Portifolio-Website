@@ -11,7 +11,7 @@
       <h2 class="mt-3 text-3xl font-bold tracking-tight text-base-content sm:text-4xl md:text-5xl">
         {{ title }}
       </h2>
-      <p v-if="subtitle" class="mt-3 max-w-prose text-base text-base-content/60 sm:text-lg">
+      <p v-if="subtitle" class="mt-3 max-w-prose text-base text-base-content/75 sm:text-lg">
         {{ subtitle }}
       </p>
     </div>

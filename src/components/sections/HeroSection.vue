@@ -51,7 +51,7 @@
       <motion.a
         v-bind="enter(6)"
         href="#summary"
-        class="flex flex-col items-center gap-1.5 text-base-content/50 transition-colors hover:text-primary"
+        class="flex flex-col items-center gap-1.5 text-base-content/70 transition-colors hover:text-primary"
         @click.prevent="scrollToSection('summary')"
       >
         <span class="text-[0.65rem] uppercase tracking-[0.3em]">{{ ui.hero.scrollHint }}</span>

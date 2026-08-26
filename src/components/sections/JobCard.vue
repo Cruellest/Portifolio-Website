@@ -4,13 +4,13 @@
     :class="mobileFullHeight ? 'h-[70dvh] justify-between overflow-hidden' : ''"
   >
     <div class="space-y-1.5">
-      <p v-if="showDate" class="text-xs font-medium uppercase tracking-wider text-base-content/50">
+      <p v-if="showDate" class="text-xs font-medium uppercase tracking-wider text-base-content/70">
         <template v-if="ui.experience.dateLabel">{{ ui.experience.dateLabel }}: </template>
         {{ job.startDate }} – {{ job.endDate }}
       </p>
       <h3 class="text-lg font-semibold leading-snug text-base-content">{{ job.title }}</h3>
       <p class="text-sm font-medium text-primary">{{ job.company }}</p>
-      <p class="text-xs text-base-content/60">{{ job.location }}</p>
+      <p class="text-xs text-base-content/75">{{ job.location }}</p>
     </div>
 
     <ul

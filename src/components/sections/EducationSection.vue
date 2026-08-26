@@ -18,14 +18,14 @@
             class="absolute -left-[2.45rem] top-1.5 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/15 sm:-left-[2.95rem]"
             aria-hidden="true"
           ></span>
-          <p class="text-xs font-medium uppercase tracking-wider text-base-content/50">
+          <p class="text-xs font-medium uppercase tracking-wider text-base-content/70">
             {{ entry.startDate }} – {{ entry.endDate }}
           </p>
           <h3 class="mt-1.5 text-xl font-semibold tracking-tight text-base-content sm:text-2xl">
             {{ entry.degree }}
           </h3>
           <p class="mt-1 font-medium text-primary">{{ entry.institution }}</p>
-          <p class="mt-0.5 text-sm text-base-content/60">{{ entry.location }}</p>
+          <p class="mt-0.5 text-sm text-base-content/75">{{ entry.location }}</p>
         </div>
       </Reveal>
     </div>

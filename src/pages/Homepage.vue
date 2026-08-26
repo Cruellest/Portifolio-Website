@@ -18,7 +18,7 @@
       <div
         class="container mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 sm:flex-row"
       >
-        <p class="text-sm text-base-content/60">
+        <p class="text-sm text-base-content/75">
           © {{ currentYear }} {{ store.personal.fullName }}
         </p>
         <div class="flex gap-1">
@@ -26,7 +26,7 @@
             :href="store.personal.github"
             target="_blank"
             rel="noopener noreferrer"
-            class="btn btn-ghost btn-sm btn-circle text-base-content/60 hover:text-primary"
+            class="btn btn-ghost btn-sm btn-circle text-base-content/75 hover:text-primary"
             :title="store.ui.hero.githubLabel"
           >
             <i class="bi bi-github" aria-hidden="true"></i>
@@ -35,14 +35,14 @@
             :href="store.personal.linkedin"
             target="_blank"
             rel="noopener noreferrer"
-            class="btn btn-ghost btn-sm btn-circle text-base-content/60 hover:text-primary"
+            class="btn btn-ghost btn-sm btn-circle text-base-content/75 hover:text-primary"
             :title="store.ui.hero.linkedinLabel"
           >
             <i class="bi bi-linkedin" aria-hidden="true"></i>
           </a>
           <a
             :href="`mailto:${store.personal.email}`"
-            class="btn btn-ghost btn-sm btn-circle text-base-content/60 hover:text-primary"
+            class="btn btn-ghost btn-sm btn-circle text-base-content/75 hover:text-primary"
             :title="store.ui.hero.emailLabel"
           >
             <i class="bi bi-envelope" aria-hidden="true"></i>

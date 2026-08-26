@@ -37,7 +37,7 @@
             class="timeline timeline-vertical gap-6 pr-2 md:timeline-horizontal md:timeline-compact md:justify-start"
           >
             <li v-for="(job, index) in jobs" :key="index" class="shrink-0 snap-start">
-              <div class="timeline-start text-xs text-base-content/60 sm:text-sm">
+              <div class="timeline-start text-xs text-base-content/75 sm:text-sm">
                 {{ job.startDate }} – {{ job.endDate }}
               </div>
               <div class="timeline-middle shrink-0">
@@ -67,7 +67,7 @@
               </div>
             </div>
           </div>
-          <p class="mt-3 text-center text-xs text-base-content/50">
+          <p class="mt-3 text-center text-xs text-base-content/70">
             {{ ui.experience.mobileSwipeHint }}
           </p>
         </div>
