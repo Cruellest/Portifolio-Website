@@ -28,7 +28,7 @@
         { "name": "Flutter", "level": "secondary" },
         { "name": "Dart", "level": "secondary" },
         { "name": "Objective C/C++", "level": "secondary" },
-        { "name": "React", "level": "secondary" },
+        { "name": "React", "level": "primary" },
         { "name": "React Native", "level": "secondary" },
         { "name": "Vue.js", "level": "primary" },
         { "name": "FastApi", "level": "secondary" },
@@ -38,6 +38,7 @@
     {
       "category": "DevOps, Cloud & Virtualization",
       "skill_list": [
+        { "name": "AWS", "level": "primary" },
         { "name": "Docker", "level": "primary" },
         { "name": "Kubernetes", "level": "primary" },
         { "name": "Podman", "level": "secondary" },
@@ -60,6 +61,7 @@
         { "name": "Software Architecture", "level": "primary" },
         { "name": "Requirements Engineering", "level": "secondary" },
         { "name": "Software Testing", "level": "primary" },
+        { "name": "Platform Engineering", "level": "primary" },
         { "name": "CI/CD", "level": "primary" },
         { "name": "Microservices", "level": "primary" },
         { "name": "Agile Methodologies", "level": "primary" }
@@ -76,8 +78,19 @@
   "experience": {
     "jobs": [
       {
+        "title": "Platform Engineer",
+        "company": "PGE/MS (Procuradoria Geral do Estado de Mato Grosso do Sul)",
+        "location": "Campo Grande, MS, Brazil",
+        "startDate": "May 2026",
+        "endDate": "Current",
+        "highlights": [
+          "Building, securing, and cost-optimizing cloud and on-premises infrastructure, and automating release, versioning, and AI pipelines.",
+          "Contributing to the development of internal software and building AI and CI/CD pipelines on AWS."
+        ]
+      },
+      {
         "title": "Full Stack Developer / Software Engineer",
-        "company": "Ledes (Laboratório de Desenvolvimento de Software)",
+        "company": "Ledes (Laboratório de Desenvolvimento de Software)/ Lia (Laboratorio de Inteligencia Artificial) UFMS",
         "location": "Campo Grande, MS, Brazil",
         "startDate": "June 2024",
         "endDate": "Current",
@@ -91,7 +104,7 @@
         "company": "Pet Sistemas (Programa de Educação Tutorial)",
         "location": "Campo Grande, MS, Brazil",
         "startDate": "August 2023",
-        "endDate": "Current",
+        "endDate": "June 2026",
         "highlights": [
           "Leading project management for software initiatives and developing cross-platform mobile applications for the academic community using React Native.",
           "Implementing unit and integration testing routines alongside authoring technical documentation to ensure high application quality, maintainability, and knowledge transfer."
@@ -117,6 +130,13 @@
     ]
   },
   "education": [
+    {
+      "degree": "Master's in Computer Science",
+      "institution": "Universidade Federal de Mato Grosso do Sul (UFMS)",
+      "location": "Campo Grande, MS, Brazil",
+      "startDate": "Jan 2026",
+      "endDate": "Expected December 2028"
+    },
     {
       "degree": "Software Engineering",
       "institution": "Universidade Federal de Mato Grosso do Sul (UFMS)",

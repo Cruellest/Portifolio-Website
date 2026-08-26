@@ -43,7 +43,10 @@
               <div class="timeline-middle shrink-0">
                 <span class="status status-primary status-sm"></span>
               </div>
-              <div class="timeline-end mb-6 md:mb-0">
+              <div
+                :ref="(el) => setJobSlotEl(el as HTMLElement | null, index)"
+                class="timeline-end mb-6 flex md:mb-0"
+              >
                 <JobCard :job="job" :show-date="false" class="w-full md:w-[24rem]" />
               </div>
             </li>
@@ -124,6 +127,34 @@ const ui = computed(() => store.ui)
 const jobs = computed(() => store.experience.jobs)
 const projects = computed(() => store.experience.projects)
 
+const JOB_CARD_STEP_PX = 40
+const jobSlotEls = ref<(HTMLElement | null)[]>([])
+
+const setJobSlotEl = (el: HTMLElement | null, index: number) => {
+  jobSlotEls.value[index] = el
+}
+
+// A escada e decrescente para destacar o emprego atual, que vem primeiro no JSON.
+// O calculo comeca pelo ultimo card e sobe, sempre respeitando a altura natural
+// medida antes, para que nenhum texto seja cortado.
+const applyJobStaircase = () => {
+  const els = jobSlotEls.value.slice(0, jobs.value.length).filter((el): el is HTMLElement => !!el)
+  if (!els.length) return
+
+  els.forEach((el) => {
+    el.style.minHeight = ''
+  })
+  const naturalHeights = els.map((el) => el.getBoundingClientRect().height)
+
+  let next = 0
+  for (let index = els.length - 1; index >= 0; index--) {
+    const natural = naturalHeights[index] ?? 0
+    const height = index === els.length - 1 ? natural : Math.max(natural, next + JOB_CARD_STEP_PX)
+    els[index]!.style.minHeight = `${Math.ceil(height)}px`
+    next = height
+  }
+}
+
 const jobsCarousel = ref<HTMLDivElement | null>(null)
 const showJobsControls = ref(false)
 const jobsCanPrev = ref(false)
@@ -156,19 +187,26 @@ const computeJobsOverflow = () => {
   updateJobsArrows()
 }
 
+const onResize = () => {
+  applyJobStaircase()
+  computeJobsOverflow()
+}
+
 const resetJobsCarousel = () => {
   jobsCarousel.value?.scrollTo({ left: 0, behavior: 'auto' })
+  applyJobStaircase()
   computeJobsOverflow()
 }
 
 onMounted(async () => {
   await nextTick()
   resetJobsCarousel()
-  window.addEventListener('resize', computeJobsOverflow)
+  void document.fonts?.ready.then(applyJobStaircase)
+  window.addEventListener('resize', onResize)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', computeJobsOverflow)
+  window.removeEventListener('resize', onResize)
 })
 
 watch(jobs, () => void nextTick().then(resetJobsCarousel))

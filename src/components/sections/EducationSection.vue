@@ -7,8 +7,13 @@
     />
 
     <div v-if="entries.length" class="relative ml-1.5 border-l border-base-300 pl-8 sm:pl-10">
-      <Reveal v-for="(entry, index) in entries" :key="index" :delay="0.08 * index">
-        <div class="relative pb-10 last:pb-0">
+      <Reveal
+        v-for="(entry, index) in entries"
+        :key="index"
+        :delay="0.08 * index"
+        class="pb-10 last:pb-0"
+      >
+        <div class="relative">
           <span
             class="absolute -left-[2.45rem] top-1.5 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/15 sm:-left-[2.95rem]"
             aria-hidden="true"
