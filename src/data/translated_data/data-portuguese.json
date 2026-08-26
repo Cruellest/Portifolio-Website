@@ -38,7 +38,7 @@
     {
       "category": "DevOps, Nuvem & Virtualização",
       "skill_list": [
-        {"name": "AWS", "level": "primary" },
+        { "name": "AWS", "level": "primary" },
         { "name": "Docker", "level": "primary" },
         { "name": "Kubernetes", "level": "primary" },
         { "name": "Podman", "level": "secondary" },

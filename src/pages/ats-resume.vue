@@ -18,7 +18,7 @@
       ATS-friendly layout: single column, semantic headings, plain text,
       no photo, no icons, no tables — optimized for automated resume parsers.
     -->
-    <article class="ats-resume">
+    <article ref="resumeContent" class="ats-resume">
       <header>
         <h1>{{ personal.fullName }}</h1>
         <p class="ats-title">{{ personal.title }}</p>
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { usePrintFlow } from '../composables/usePrintFlow'
 import { usePortfolioStore } from '../stores/portfolio'
 import { displayUrl } from '../utils/url'
@@ -95,9 +95,48 @@ const linkedinDisplay = computed(() => displayUrl(personal.value.linkedin))
 
 const { overlayVisible, triggerPrint } = usePrintFlow()
 
+const resumeContent = ref<HTMLElement | null>(null)
+
+// A4 content area (210x297mm minus the 15mm @page margin)
+const MM_TO_PX = 3.7795
+const A4_CONTENT_WIDTH_MM = 180
+const A4_CONTENT_HEIGHT_PX = 267 * MM_TO_PX
+
+/**
+ * Scales the resume down so it always prints on a single A4 page.
+ *
+ * The article is laid out wider than the page (180mm / scale) so that scaling
+ * it back down lands exactly on the page width. Widening reflows the text and
+ * changes its height, so the scale is solved by iteration instead of a single
+ * division. The layout height is then pinned to one page: `transform` only
+ * affects painting, and the printer paginates on the layout box.
+ */
+const fitToPage = () => {
+  const el = resumeContent.value
+  if (!el) return
+  el.style.transform = ''
+  el.style.width = ''
+  el.style.height = ''
+
+  let scale = 1
+  for (let pass = 0; pass < 5; pass++) {
+    el.style.width = `${A4_CONTENT_WIDTH_MM / scale}mm`
+    const next = Math.min(1, A4_CONTENT_HEIGHT_PX / el.scrollHeight)
+    if (Math.abs(next - scale) < 0.002) break
+    scale = next
+  }
+
+  if (scale < 1) {
+    el.style.transform = `scale(${scale})`
+    el.style.height = `${Math.floor(A4_CONTENT_HEIGHT_PX)}px`
+  } else {
+    el.style.width = ''
+  }
+}
+
 onMounted(async () => {
   await nextTick()
-  await triggerPrint()
+  await triggerPrint(fitToPage)
 })
 </script>
 
@@ -105,12 +144,20 @@ onMounted(async () => {
 .ats-page {
   min-height: 100dvh;
   background: white;
+  padding: 15mm 0;
+  /* The article is laid out wider than the page before being scaled down */
+  overflow-x: auto;
 }
 
+/*
+ * Same 180mm content width on screen and on paper, so the fit-to-page
+ * measurement taken on screen matches what the printer lays out.
+ */
 .ats-resume {
-  max-width: 180mm;
+  width: 180mm;
   margin: 0 auto;
-  padding: 15mm 10mm;
+  padding: 0;
+  transform-origin: top left;
   font-family:
     'Inter Variable',
     ui-sans-serif,
@@ -119,74 +166,74 @@ onMounted(async () => {
     'Segoe UI',
     Roboto,
     sans-serif;
-  font-size: 11.5pt;
-  line-height: 1.5;
+  font-size: 9.6pt;
+  line-height: 1.34;
   color: #111;
   background: white;
 }
 
 .ats-resume h1 {
-  font-size: 20pt;
+  font-size: 17pt;
   font-weight: 700;
-  margin: 0 0 2pt;
+  margin: 0 0 1pt;
 }
 
 .ats-title {
-  font-size: 12pt;
+  font-size: 10.5pt;
   font-weight: 600;
-  margin: 0 0 6pt;
+  margin: 0 0 4pt;
 }
 
 .ats-contact {
-  font-size: 10.5pt;
-  margin: 0 0 2pt;
+  font-size: 9pt;
+  margin: 0 0 1pt;
 }
 
 .ats-resume section {
-  margin-top: 14pt;
+  margin-top: 9pt;
 }
 
 .ats-resume h2 {
-  font-size: 13pt;
+  font-size: 10.5pt;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   border-bottom: 1px solid #333;
-  padding-bottom: 3pt;
-  margin: 0 0 8pt;
+  padding-bottom: 2pt;
+  margin: 0 0 5pt;
   break-after: avoid;
 }
 
 .ats-resume h3 {
-  font-size: 11.5pt;
+  font-size: 9.8pt;
   font-weight: 700;
-  margin: 0 0 1pt;
+  margin: 0 0 0.5pt;
   break-after: avoid;
 }
 
 .ats-resume p {
-  margin: 0 0 4pt;
+  margin: 0 0 2pt;
 }
 
 .ats-entry,
 .ats-skill-category {
-  margin-bottom: 8pt;
+  margin-bottom: 5pt;
   break-inside: avoid;
 }
 
 .ats-entry-meta {
-  font-size: 10.5pt;
+  font-size: 9pt;
   color: #333;
 }
 
 .ats-resume ul {
-  margin: 2pt 0 0 14pt;
+  margin: 1pt 0 0 12pt;
   padding: 0;
   list-style: disc outside;
 }
 
 .ats-resume li {
-  margin-bottom: 3pt;
+  margin-bottom: 1.5pt;
 }
 
 @media print {
@@ -199,10 +246,12 @@ onMounted(async () => {
 
   .ats-page {
     background: white !important;
+    padding: 0 !important;
+    overflow: hidden !important;
   }
 
   .ats-resume {
-    max-width: none;
+    margin: 0 !important;
     padding: 0;
   }
 
