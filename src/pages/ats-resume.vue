@@ -25,7 +25,10 @@
         <p class="ats-contact">
           {{ personal.location }} · {{ personal.phone }} · {{ personal.email }}
         </p>
-        <p class="ats-contact">{{ githubDisplay }} · {{ linkedinDisplay }}</p>
+        <p class="ats-contact">
+          {{ githubDisplay }} · {{ linkedinDisplay }}
+          <template v-if="websiteDisplay"> · {{ websiteDisplay }}</template>
+        </p>
       </header>
 
       <section>
@@ -92,6 +95,7 @@ const ui = computed(() => store.ui)
 
 const githubDisplay = computed(() => displayUrl(personal.value.github))
 const linkedinDisplay = computed(() => displayUrl(personal.value.linkedin))
+const websiteDisplay = computed(() => displayUrl(personal.value.website))
 
 const { overlayVisible, triggerPrint } = usePrintFlow()
 

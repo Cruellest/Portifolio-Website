@@ -53,6 +53,17 @@
                   {{ linkedinDisplay }}
                 </a>
               </p>
+              <p v-if="personal.website">
+                <i class="bi bi-globe contact-icon" aria-hidden="true"></i>
+                <a
+                  :href="personal.website"
+                  target="_blank"
+                  rel="noopener"
+                  :title="personal.website"
+                >
+                  {{ websiteDisplay }}
+                </a>
+              </p>
             </div>
           </div>
         </div>
@@ -133,6 +144,7 @@ const ui = computed(() => store.ui)
 
 const githubDisplay = computed(() => displayUrl(personal.value.github))
 const linkedinDisplay = computed(() => displayUrl(personal.value.linkedin))
+const websiteDisplay = computed(() => displayUrl(personal.value.website))
 
 const { overlayVisible, triggerPrint } = usePrintFlow()
 
